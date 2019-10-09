@@ -60,8 +60,8 @@ EOF
 rman target / log $logfile append <<EOF
      run{
         allocate channel a1 type disk;
-	allocate channel a2 type disk;
-	allocate channel a3 type disk;
+		allocate channel a2 type disk;
+		allocate channel a3 type disk;
         crosscheck backup;
         delete noprompt expired backup;
         crosscheck archivelog all;
@@ -71,8 +71,8 @@ rman target / log $logfile append <<EOF
         backup as compressed backupset archivelog all format  '${backupdir}/arc_%T_%d_%s_%p.bak' delete all input;
         backup current controlfile format '${backupdir}/ctl_%T_%d_db_%s_%p.bak';
         release channel a1;
-	release channel a2;
-	release channel a3;
+		release channel a2;
+		release channel a3;
         }
 EOF
 echo `date +'%Y%m%d %T'`' end backup-----' >> $logfile
@@ -82,42 +82,43 @@ if [ -d ${rmdiractory} ];then
 	rm -rf ${rmdiractory}
 	echo `date +'%Y%m%d %T'`' end rm_his-----' >> $logfile
 fi
-#send mail to smc,if it have some error in backing
 
-if [ -e ${logfile} ];then
-	sum=`cat ${logfile} | grep -E "RMAN-|ORA-"|wc -l`
-        if [ ${sum} -gt 0 ];then
-                sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份报警' "`cat ${logfile} | grep -E 'RMAN-|ORA-'`" "${logfile}" > /home/oracle/shell/mail_rman.log
-                while true
-                do
-                        mail_status=`cat /home/oracle/shell/mail_rman.log | awk -F ':' '{print $NF}' | awk '{print $NF}' |awk -F'!' '{print $1}'`
-                        if [ "${mail_status}" = "successfully" ];then
-                                echo 'mail is ok!'
-                        break
-                else
-                        echo 'mail is failed'
-                        sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份报警' "`cat ${logfile} | grep -E 'RMAN-|ORA-'`" "${logfile}" > /home/oracle/shell/mail_rman.log
-                        sleep 20s
-                        continue
-                        fi
-                done
-        else
-                sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份成功' "${logfile}" "${logfile}" > /home/oracle/shell/mail_rman.log
-                while true
-                do
-                        mail_status=`cat /home/oracle/shell/mail_rman.log | awk -F ':' '{print $NF}' | awk '{print $NF}' |awk -F'!' '{print $1}'`
-                        if [ "${mail_status}" = "successfully" ];then
-                                echo 'mail is ok!'
-                        break
-                else
-                        echo 'mail is failed'
-                        sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份成功' "${logfile}" "${logfile}" > /home/oracle/shell/mail_rman.log
-                        sleep 20s
-                        continue
-                        fi
-                done
-        fi
-fi
 
-exit 0
+##send mail to smc,if it have some error in backing
+#if [ -e ${logfile} ];then
+#	sum=`cat ${logfile} | grep -E "RMAN-|ORA-"|wc -l`
+#        if [ ${sum} -gt 0 ];then
+#                sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份报警' "`cat ${logfile} | grep -E 'RMAN-|ORA-'`" "${logfile}" > /home/oracle/shell/mail_rman.log
+#                while true
+#                do
+#                        mail_status=`cat /home/oracle/shell/mail_rman.log | awk -F ':' '{print $NF}' | awk '{print $NF}' |awk -F'!' '{print $1}'`
+#                        if [ "${mail_status}" = "successfully" ];then
+#                                echo 'mail is ok!'
+#                        break
+#                else
+#                        echo 'mail is failed'
+#                        sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份报警' "`cat ${logfile} | grep -E 'RMAN-|ORA-'`" "${logfile}" > /home/oracle/shell/mail_rman.log
+#                        sleep 20s
+#                        continue
+#                        fi
+#                done
+#        else
+#                sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份成功' "${logfile}" "${logfile}" > /home/oracle/shell/mail_rman.log
+#                while true
+#                do
+#                        mail_status=`cat /home/oracle/shell/mail_rman.log | awk -F ':' '{print $NF}' | awk '{print $NF}' |awk -F'!' '{print $1}'`
+#                        if [ "${mail_status}" = "successfully" ];then
+#                                echo 'mail is ok!'
+#                        break
+#                else
+#                        echo 'mail is failed'
+#                        sh /home/oracle/shell/mail_pl.sh "smc@transilink.com" 'oracle北京45备份成功' "${logfile}" "${logfile}" > /home/oracle/shell/mail_rman.log
+#                        sleep 20s
+#                        continue
+#                        fi
+#                done
+#        fi
+#fi
+#
+#exit 0
 

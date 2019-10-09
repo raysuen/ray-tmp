@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v01
+#v02
 
 
 
@@ -91,13 +91,13 @@ ObtainBasedir(){
 ####################################################################################
 ObtainSID(){
 	if [ "${osid:-None}" == "None" ];then
-		read -p "`echo -e "please enter the sid.default [${c_yellow}orcl${c_end}]: "`" osid
+		read -p "`echo -e "please enter the sid.default [${c_yellow}orcl${c_end}]: "`" oside
 	fi
-	#echo ${osid}
 	orasid=${osid:-orcl}
 	su - oracle -c "sed -i 's/^ORACLE_SID=$/ORACLE_SID='${orasid}'/g' ~/.bash_profile"
 	source ~/.bash_profile
-	
+	#sed -i 's/^GDBNAME = \"\"$/GDBNAME = "'${orasid}'"/g' ${basedir}/dbca.rsp
+	#sed -i 's/^SID = \"\"$/SID = "'${orasid}'"/g' ${basedir}/dbca.rsp
 }
 
 ####################################################################################
@@ -380,7 +380,6 @@ EditRdbmsRspFiles(){
 
 }
 
-
 ####################################################################################
 #edit dbca 122 rsp files
 ####################################################################################
@@ -551,7 +550,7 @@ InstallInstance(){
 					mkdir ${datafiledir}
 					chown oracle:oinstall ${datafiledir}
 				fi
-				su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp -datafileDestination ${datafiledir}"
+				su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp -datafileDestination ${datafiledir}
 			else
 				ObtainDatafileDir
 				if [ "${datafiledir:-none}" == "none" ];then
@@ -641,9 +640,14 @@ InstallFun(){
 	elif [ "${installoption:-None}" == "None" ];then
 		ObtainInstanceOption
 	fi
+	#if [ `egrep "server" database/stage/config.xml | awk -F '[ =]+' '/COMP/{print $5}' | awk -F'[."]' '{print $2"."$3}'` == "12.1" ];then
+	#	EditDbca121RspFiles
+	#elif [ `egrep "server" database/stage/config.xml | awk -F '[ =]+' '/COMP/{print $5}' | awk -F'[."]' '{print $2"."$3}'` == "12.2" ];then
+	#	EditDbca122RspFiles
+	#fi
+	EditDbca121RspFiles
 	ObtainMemPerc
 	ObtainSID
-	EditDbca122RspFiles
 	InstallInstance
 	ConfigListen
 	ConfigTnsnames
