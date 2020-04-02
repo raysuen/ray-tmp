@@ -2,7 +2,7 @@
 #by raysuen
 #v01
 
-
+export LANG=C
 
 #################################################################################
 #before the bash you must install necessary rpm for oracle and edit hostname    #
