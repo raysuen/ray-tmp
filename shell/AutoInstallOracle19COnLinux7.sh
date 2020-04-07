@@ -128,14 +128,14 @@ ObtainMemPerc(){
 #install rpm that oracle is necessary for installing
 ####################################################################################
 InstallRPM(){
-	yum -y install libstdc++-devel gcc-c++ bc binutils.x86_64 compat-libcap1.x86_64 compat-libstdc++-33.i686 compat-libstdc++-33.x86_64 glibc.i686 glibc.x86_64 glibc-devel.i686 glibc-devel.x86_64 ksh libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 libX11.i686 libX11.x86_64 libXau.i686 libXau.x86_64 libXi.i686 libXi.x86_64 libXtst.i686 libXtst.x86_64 libXrender-devel.i686 libXrender-devel.x86_64 libXrender.i686 libXrender.x86_64 libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++.i686 libstdc++.x86_64 libxcb.i686 libxcb.x86_64 make.x86_64 nfs-utils.x86_64 net-tools python-configshell python-rtslib python-six smartmontools sysstat.x86_64 targetcli unixODBC unixODBC-devel
+	yum -y install bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel
 	# -y localinstall compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm 
 	#yum -y localinstall elfutils-libelf-devel-0.168-8.el7.x86_64.rpm
 	ls -l compat* elfutils* | awk -v rpmpackage="" '{rpmpackage=$NF" "rpmpackage}END{print "yum -y localinstall "rpmpackage}' | bash 
 	while true
 	do
-		if [ `rpm -q libstdc++-devel gcc-c++ bc binutils.x86_64 compat-libcap1.x86_64 compat-libstdc++-33.i686 compat-libstdc++-33.x86_64 glibc.i686 glibc.x86_64 glibc-devel.i686 glibc-devel.x86_64 ksh libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 libX11.i686 libX11.x86_64 libXau.i686 libXau.x86_64 libXi.i686 libXi.x86_64 libXtst.i686 libXtst.x86_64 libXrender-devel.i686 libXrender-devel.x86_64 libXrender.i686 libXrender.x86_64 libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++.i686 libstdc++.x86_64 libxcb.i686 libxcb.x86_64 make.x86_64 nfs-utils.x86_64 net-tools python-configshell python-rtslib python-six smartmontools sysstat.x86_64 targetcli unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed" | wc -l` -gt 0 ];then
-			rpm -q libstdc++-devel gcc-c++ bc binutils.x86_64 compat-libcap1.x86_64 compat-libstdc++-33.i686 compat-libstdc++-33.x86_64 glibc.i686 glibc.x86_64 glibc-devel.i686 glibc-devel.x86_64 ksh libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 libX11.i686 libX11.x86_64 libXau.i686 libXau.x86_64 libXi.i686 libXi.x86_64 libXtst.i686 libXtst.x86_64 libXrender-devel.i686 libXrender-devel.x86_64 libXrender.i686 libXrender.x86_64 libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++.i686 libstdc++.x86_64 libxcb.i686 libxcb.x86_64 make.x86_64 nfs-utils.x86_64 net-tools python-configshell python-rtslib python-six smartmontools sysstat.x86_64 targetcli unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed"
+		if [ `rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed" | wc -l` -gt 0 ];then
+			rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed"
 			read -p "`echo -e "Please confirm that all rpm package have installed.[${c_yellow}yes/no${c_end}] default yes:"`" ans
 			if [ "${ans:-yes}" == "yes" ];then
 				break
@@ -162,7 +162,7 @@ ObtainBasicInfo(){
 	#obtain ORACLE_BASE ORACLE_HOME
 	################################################################################
 	orabase="${basedir}/app/oracle"    #set path of oracle_base
-	orahome="${basedir}/app/oracle/product/18.3.0/dbhome_1" #set path of oracle_home
+	orahome="${basedir}/app/oracle/product/19.3.0/dbhome_1" #set path of oracle_home
 	
 }
 
@@ -221,6 +221,16 @@ CreateGUAndEditprofile(){
 	if [ `egrep "racdba" /etc/group | wc -l` -eq 0 ];then
 		groupadd -g 11007 racdba  
 	fi
+	
+	#if [ `egrep "oinstall|dba|oper" /etc/group | wc -l` -eq 0 ];then
+	#	groupadd -g 11001 oinstall  
+	#	groupadd -g 11002 dba  
+	#	groupadd -g 11003 oper  
+	#	groupadd -g 11004 backupdba  
+	#	groupadd -g 11005 dgdba  
+	#	groupadd -g 11006 kmdba
+	#	groupadd -g 11007 racdba
+	#fi
 	if [ `egrep "oracle" /etc/passwd | wc -l` -eq 0 ];then
 		useradd -u 11011 -g oinstall -G dba,backupdba,dgdba,kmdba,oper,racdba oracle 
 		if [ $? -ne 0 ];then
@@ -389,12 +399,12 @@ EditRdbmsRspFiles(){
 }
 
 InstallRdbms(){
-	if [ ! -f "${basedir}/LINUX.X64_180000_db_home.zip" ];then
+	if [ ! -f "${basedir}/LINUX.X64_193000_db_home.zip" ];then
         echo "Database file not exists.Please ensure you have uploaded."
 		exit 79
 	else
-		chown oracle:oinstall ${basedir}/LINUX.X64_180000_db_home.zip
-		su - oracle -c "unzip -d ${orahome} ${basedir}/LINUX.X64_180000_db_home.zip"
+		chown oracle:oinstall ${basedir}/LINUX.X64_193000_db_home.zip
+		su - oracle -c "unzip -d ${orahome} ${basedir}/LINUX.X64_193000_db_home.zip"
 		
 	fi
 	su - oracle -c "${orahome}/runInstaller -silent -noconfig -ignorePrereq -responseFile ${basedir}/rdbms.rsp > ${basedir}/install.log"
@@ -491,7 +501,7 @@ EditDbca18CspFiles(){
 	echo 'useLocalUndoForPDBs=true' >> ${basedir}/dbca.rsp
 	echo 'pdbAdminPassword=' >> ${basedir}/dbca.rsp
 	echo 'nodelist=    ' >> ${basedir}/dbca.rsp
-	echo 'templateName=/u01/app/oracle/product/18.3.0/dbhome_1/assistants/dbca/templates/New_Database.dbt' >> ${basedir}/dbca.rsp
+	echo 'templateName=/u01/app/oracle/product/19.3.0/dbhome_1/assistants/dbca/templates/New_Database.dbt' >> ${basedir}/dbca.rsp
 	echo 'sysPassword=oracle ' >> ${basedir}/dbca.rsp
 	echo 'systemPassword=oracle ' >> ${basedir}/dbca.rsp
 	echo 'serviceUserPassword=' >> ${basedir}/dbca.rsp
