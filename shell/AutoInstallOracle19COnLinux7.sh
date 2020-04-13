@@ -676,12 +676,12 @@ InitialPara(){
 #install function
 ####################################################################################
 InstallFun(){
+	InstallRPM
 	StopFirewallAndDisableSelinux
 	ObtainBasedir
 	ObtainIP
 	ObtainBasicInfo
 	CheckSwap
-	InstallRPM
 	CreateGUAndEditprofile
 	EditParaFiles
 	EditRdbmsRspFiles

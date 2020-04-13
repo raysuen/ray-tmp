@@ -128,7 +128,7 @@ ObtainMemPerc(){
 #install rpm that oracle is necessary for installing
 ####################################################################################
 InstallRPM(){
-	yum -y install libstdc++-devel gcc-c++ bc binutils.x86_64 compat-libcap1.x86_64 compat-libstdc++-33.i686 compat-libstdc++-33.x86_64 glibc.i686 glibc.x86_64 glibc-devel.i686 glibc-devel.x86_64 ksh libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 libX11.i686 libX11.x86_64 libXau.i686 libXau.x86_64 libXi.i686 libXi.x86_64 libXtst.i686 libXtst.x86_64 libXrender-devel.i686 libXrender-devel.x86_64 libXrender.i686 libXrender.x86_64 libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++.i686 libstdc++.x86_64 libxcb.i686 libxcb.x86_64 make.x86_64 nfs-utils.x86_64 net-tools python-configshell python-rtslib python-six smartmontools sysstat.x86_64 targetcli unixODBC unixODBC-devel
+	yum -y install  libstdc++-devel gcc-c++ bc binutils.x86_64 compat-libcap1.x86_64 compat-libstdc++-33.i686 compat-libstdc++-33.x86_64 glibc.i686 glibc.x86_64 glibc-devel.i686 glibc-devel.x86_64 ksh libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 libX11.i686 libX11.x86_64 libXau.i686 libXau.x86_64 libXi.i686 libXi.x86_64 libXtst.i686 libXtst.x86_64 libXrender-devel.i686 libXrender-devel.x86_64 libXrender.i686 libXrender.x86_64 libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++.i686 libstdc++.x86_64 libxcb.i686 libxcb.x86_64 make.x86_64 nfs-utils.x86_64 net-tools python-configshell python-rtslib python-six smartmontools sysstat.x86_64 targetcli unixODBC unixODBC-devel
 	# -y localinstall compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm 
 	#yum -y localinstall elfutils-libelf-devel-0.168-8.el7.x86_64.rpm
 	ls -l compat* elfutils* | awk -v rpmpackage="" '{rpmpackage=$NF" "rpmpackage}END{print "yum -y localinstall "rpmpackage}' | bash 
@@ -666,12 +666,12 @@ InitialPara(){
 #install function
 ####################################################################################
 InstallFun(){
+	InstallRPM
 	StopFirewallAndDisableSelinux
 	ObtainBasedir
 	ObtainIP
 	ObtainBasicInfo
 	CheckSwap
-	InstallRPM
 	CreateGUAndEditprofile
 	EditParaFiles
 	EditRdbmsRspFiles
