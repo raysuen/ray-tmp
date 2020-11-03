@@ -1,6 +1,9 @@
 #!/bin/bash
 #by raysuen
-#v1.1
+#v02
+#
+#password function and characterSet function are new set.
+#
 
 export LANG=C
 
@@ -9,7 +12,7 @@ export LANG=C
 #################################################################################
 echo "please confirm that you have put the script and software into the base dir"
 echo ""
-c_yellow="\e[1;33m"
+c_red="\e[1;33m"
 c_red="\e[1;31m"
 c_end="\e[0m"
 echo ""
@@ -43,7 +46,7 @@ ObtainIP(){
 		
 		while true
 		do
-			read -p "`echo -e "please enter the name of Ethernet，default [${c_yellow}lo${c_end}]: "`" eth
+			read -p "`echo -e "please enter the name of Ethernet，default [${c_red}lo${c_end}]: "`" eth
 			ipaddr=`ifconfig ${eth:-lo} 2> /dev/null | egrep -v "inet6" | awk -F'inet|netmask' '{print $2}' | sed ':label;N;s/\n//;b label' | sed 's/ //g'`
 			[ "${ipaddr:-None}" == "None" ]&& echo -e "pleas input the ${c_red}exact name of Ethernet${c_end}"&& continue
 			if [ -n "$(echo ${ipaddr} | sed 's/[0-9]//g' | sed 's/.//g')" ];then
@@ -69,7 +72,7 @@ ObtainBasedir(){
 	if [ "${basedir:-None}" == "None" ];then
 		while true
 		do
-			read -p "`echo -e "please enter the name of base dir,put this shell and software in the dir.default [${c_yellow}/u01${c_end}]: "`" bdir
+			read -p "`echo -e "please enter the name of base dir,put this shell and software in the dir.default [${c_red}/u01${c_end}]: "`" bdir
 			basedir=${bdir:-/u01}  #this is base dir,put this shell and software in the dir
 			if [ ! -d ${basedir} ];then
 		    	echo -e "the ${basedir} is not exsist,please ${c_red}make it up${c_end}"
@@ -86,18 +89,50 @@ ObtainBasedir(){
 	fi 
 }
 
+
+
+####################################################################################
+#obtain the characterSet for instance
+####################################################################################
+ObtainCharacter(){
+	if [ "${Inchar:-None}" == "None" ];then
+		echo "please enter the characterSet for your instance."
+		echo "(1) ZHS16GBK"
+		echo "(2) AL32UTF8"
+		while true
+		do
+			read -p "`echo -e ".Please enter 1 or 2 to choose character. "`" Inchar
+			if [ ! ${Inchar} ];then
+				echo "You must enter 1 or 2 to choose the character."
+				continue
+			elif [ ${Inchar} -eq 1 ];then
+				InCharacter=ZHS16GBK  #this is character of instance. 
+				break
+			elif [ ${Inchar} -eq 2 ];then
+				InCharacter=AL32UTF8  #this is character of instance. 
+				break
+			else
+				echo "You must enter 1 or 2 to choose the character."
+				continue
+			fi
+			
+			
+		done
+	fi 
+}
+
 ####################################################################################
 #obtain ORACLE_SID
 ####################################################################################
 ObtainSID(){
 	if [ "${osid:-None}" == "None" ];then
-		read -p "`echo -e "please enter the sid.default [${c_yellow}orcl${c_end}]: "`" oside
+		read -p "`echo -e "please enter the sid.default [${c_red}orcl${c_end}]: "`" osid
 	fi
+	#echo ${osid}
 	orasid=${osid:-orcl}
 	su - oracle -c "sed -i 's/^ORACLE_SID=$/ORACLE_SID='${orasid}'/g' ~/.bash_profile"
 	source ~/.bash_profile
-	sed -i 's/^GDBNAME = \"\"$/GDBNAME = "'${orasid}'"/g' ${basedir}/dbca.rsp
-	sed -i 's/^SID = \"\"$/SID = "'${orasid}'"/g' ${basedir}/dbca.rsp
+	
 }
 
 ####################################################################################
@@ -107,7 +142,7 @@ ObtainMemPerc(){
 	if [ "${mper:-None}" == "None" ];then
 		while true
 		do
-			read -p "`echo -e "Please enter the momery percentage of the oracle using server momery.default [${c_yellow}60${c_end}]: "`" mper
+			read -p "`echo -e "Please enter the momery percentage of the oracle using server momery.default [${c_red}60${c_end}]: "`" mper
 			perusemom=${mper:-60}
 			if [ -n "`echo ${perusemom} | sed 's/[0-9]//g' | sed 's/-//g'`" ];then
 				echo -e "please enter ${c_red}exact number${c_end}"
@@ -120,7 +155,7 @@ ObtainMemPerc(){
 	else
 		perusemom=${mper}
 	fi
-	sed -i 's/^MEMORYPERCENTAGE = \"\"$/MEMORYPERCENTAGE = "'${perusemom}'"/g' ${basedir}/dbca.rsp
+	#sed -i 's/^MEMORYPERCENTAGE = \"\"$/MEMORYPERCENTAGE = "'${perusemom}'"/g' ${basedir}/dbca.rsp
 	
 }
 
@@ -128,7 +163,7 @@ ObtainMemPerc(){
 #install rpm that oracle is necessary for installing
 ####################################################################################
 InstallRPM(){
-	yum -y install elfutils-libelf-devel binutils compat-libcap1 compat-libstdc++ compat-libstdc++*.i686 gcc gcc-c++ glibc-2*.i686 glibc glibc-devel*.i686 glibc-devel ksh libgcc libgcc-*.i686 libstdc++*.i686 libstdc++ libstdc++-devel libstdc++devel*.i686 libaio-*.i686 libaio libaio-*.i686 libaio-devel libaio-devel*.i686 make sysstat unixODBC-devel unixODBC*.i686
+	yum -y install binutils compat-libcap1 compat-libstdc++ compat-libstdc++*.i686 gcc gcc-c++ glibc-2*.i686 glibc glibc-devel*.i686 glibc-devel ksh libgcc libgcc-*.i686 libstdc++*.i686 libstdc++ libstdc++-devel libstdc++devel*.i686 libaio-*.i686 libaio libaio-*.i686 libaio-devel libaio-devel*.i686 make sysstat unixODBC-devel unixODBC*.i686
 	# -y localinstall compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm 
 	#yum -y localinstall elfutils-libelf-devel-0.168-8.el7.x86_64.rpm
 	ls -l compat* elfutils* | awk -v rpmpackage="" '{rpmpackage=$NF" "rpmpackage}END{print "yum -y localinstall "rpmpackage}' | bash 
@@ -136,7 +171,7 @@ InstallRPM(){
 	do
 		if [ `rpm -q compat-libstdc++-33 elfutils-libelf-devel binutils compat-libcap1 compat-libstdc++ compat-libstdc++*.i686 gcc gcc-c++ glibc-2*.i686 glibc glibc-devel*.i686 glibc-devel ksh libgcc libgcc-*.i686 libstdc++*.i686 libstdc++ libstdc++-devel libstdc++devel*.i686 libaio-*.i686 libaio libaio-*.i686 libaio-devel libaio-devel*.i686 make sysstat unixODBC-devel unixODBC*.i686 --qf '%{name}.%{arch}\n'| grep "not installed" | wc -l` -gt 0 ];then
 			rpm -q compat-libstdc++-33 elfutils-libelf-devel binutils compat-libcap1 compat-libstdc++ compat-libstdc++*.i686 gcc gcc-c++ glibc-2*.i686 glibc glibc-devel*.i686 glibc-devel ksh libgcc libgcc-*.i686 libstdc++*.i686 libstdc++ libstdc++-devel libstdc++devel*.i686 libaio-*.i686 libaio libaio-*.i686 libaio-devel libaio-devel*.i686 make sysstat unixODBC-devel unixODBC*.i686 --qf '%{name}.%{arch}\n' | grep "not installed"
-			read -p "`echo -e "Please confirm that all rpm package have installed.[${c_yellow}yes/no${c_end}] default yes:"`" ans
+			read -p "`echo -e "Please confirm that all rpm package have installed.[${c_red}yes/no${c_end}] default yes:"`" ans
 			if [ "${ans:-yes}" == "yes" ];then
 				break
 			else
@@ -181,7 +216,7 @@ CheckSwap(){
 			break
 		fi
 		echo "Have you been increased the space of swap?"
-		read -p "`echo -e "Whether or not to check the space of swap? ${c_yellow}yes/no${c_end}. no will quit the intalling: "`" swapDone
+		read -p "`echo -e "Whether or not to check the space of swap? ${c_red}yes/no${c_end}. no will quit the intalling: "`" swapDone
 		if [[ "${swapDone}" = "yes" ]];then
 			continue
 	  	elif [[ "${swapDone}" = "no" ]];then
@@ -317,20 +352,19 @@ EditRdbmsRspFiles(){
 	if [ -f "${basedir}/rdbms.rsp" ];then
 		rm -f ${basedir}/rdbms.rsp
 	fi
-	echo 'oracle.install.responseFileVersion=/oracle/install/rspfmt_dbinstall_response_schema_v12.1.0' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.responseFileVersion=/oracle/install/rspfmt_dbinstall_response_schema_v12.2.0' >> ${basedir}/rdbms.rsp
 	echo 'oracle.install.option=INSTALL_DB_SWONLY' >> ${basedir}/rdbms.rsp
-	echo 'ORACLE_HOSTNAME='${sname} >> ${basedir}/rdbms.rsp
 	echo 'UNIX_GROUP_NAME=oinstall' >> ${basedir}/rdbms.rsp
 	echo 'INVENTORY_LOCATION='/${basedir}'/app/oraInventory' >> ${basedir}/rdbms.rsp
-	echo 'SELECTED_LANGUAGES=en,zh_CN' >> ${basedir}/rdbms.rsp    
 	echo 'ORACLE_HOME='${orahome} >> ${basedir}/rdbms.rsp
 	echo 'ORACLE_BASE='${orabase} >> ${basedir}/rdbms.rsp
 	echo 'oracle.install.db.InstallEdition=EE' >> ${basedir}/rdbms.rsp
-	echo 'oracle.install.db.DBA_GROUP=dba' >> ${basedir}/rdbms.rsp
-	echo 'oracle.install.db.OPER_GROUP=oper' >> ${basedir}/rdbms.rsp
-	echo 'oracle.install.db.BACKUPDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
-	echo 'oracle.install.db.DGDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
-	echo 'oracle.install.db.KMDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSOPER_GROUP=oper' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSBACKUPDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSDGDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSKMDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
+	echo 'oracle.install.db.OSRACDBA_GROUP=dba' >> ${basedir}/rdbms.rsp
 	echo 'oracle.install.db.rac.configurationType=' >> ${basedir}/rdbms.rsp
 	echo 'oracle.install.db.CLUSTER_NODES=' >> ${basedir}/rdbms.rsp
 	echo 'oracle.install.db.isRACOneInstall=false' >> ${basedir}/rdbms.rsp
@@ -381,38 +415,86 @@ EditRdbmsRspFiles(){
 
 }
 
+
 ####################################################################################
-#edit dbca 121 rsp files
+#edit dbca 122 rsp files
 ####################################################################################
-EditDbca121RspFiles(){
+EditDbca122RspFiles(){
 	####################################################################################
 	#edit responseFile of instance
 	####################################################################################
 	#ZHS16GBK
-	echo '[GENERAL]' > ${basedir}/dbca.rsp
-	echo 'RESPONSEFILE_VERSION ="''12.1.0''"' >> ${basedir}/dbca.rsp
-	echo 'OPERATION_TYPE = "''createDatabase''"' >> ${basedir}/dbca.rsp
-	echo '[CREATEDATABASE]' >> ${basedir}/dbca.rsp
-	echo 'GDBNAME = "'${orasid}'"' >> ${basedir}/dbca.rsp
-	echo 'SID = "'${orasid}'"' >> ${basedir}/dbca.rsp
-	echo 'TEMPLATENAME = "''General_Purpose.dbc''"' >> ${basedir}/dbca.rsp
-	echo 'SYSPASSWORD = "''oracle''"' >> ${basedir}/dbca.rsp
-	echo 'SYSTEMPASSWORD = "''oracle''"' >> ${basedir}/dbca.rsp
-	echo 'SYSMANPASSWORD = "''oracle''"' >> ${basedir}/dbca.rsp
-	echo 'CHARACTERSET = "''AL32UTF8''"' >> ${basedir}/dbca.rsp
-	echo 'NATIONALCHARACTERSET= "''AL16UTF16''"' >> ${basedir}/dbca.rsp
-	echo 'MEMORYPERCENTAGE = "'${perusemom}'"' >> ${basedir}/dbca.rsp
-	echo 'AUTOMATICMEMORYMANAGEMENT = "''TRUE''"' >> ${basedir}/dbca.rsp
+	sga=`free -m | awk '/Mem/{print int($2*('${perusemom}'/100)*0.75)}'`
+	pga=`free -m | awk '/Mem/{print int($2*('${perusemom}'/100)*0.25)}'`
+	echo 'responseFileVersion=/oracle/assistants/rspfmt_dbca_response_schema_v12.2.0' > ${basedir}/dbca.rsp
+	echo 'gdbName='${orasid} >> ${basedir}/dbca.rsp
+	echo 'sid='${orasid} >> ${basedir}/dbca.rsp
+	echo 'databaseConfigType=SI' >> ${basedir}/dbca.rsp
+	echo 'RACOneNodeServiceName=' >> ${basedir}/dbca.rsp
+	echo 'policyManaged=false' >> ${basedir}/dbca.rsp
+	echo 'createServerPool=false' >> ${basedir}/dbca.rsp
+	echo 'serverPoolName=' >> ${basedir}/dbca.rsp
+	echo 'cardinality=' >> ${basedir}/dbca.rsp
+	echo 'force=false' >> ${basedir}/dbca.rsp
+	echo 'pqPoolName=' >> ${basedir}/dbca.rsp
+	echo 'pqCardinality=' >> ${basedir}/dbca.rsp
+	echo 'createAsContainerDatabase=false' >> ${basedir}/dbca.rsp
+	echo 'numberOfPDBs=0' >> ${basedir}/dbca.rsp
+	echo 'pdbName=' >> ${basedir}/dbca.rsp
+	echo 'useLocalUndoForPDBs=true' >> ${basedir}/dbca.rsp
+	echo 'pdbAdminPassword=' >> ${basedir}/dbca.rsp
+	echo 'nodelist=' >> ${basedir}/dbca.rsp
+	echo 'templateName='${orahome}'/assistants/dbca/templates/New_Database.dbt' >> ${basedir}/dbca.rsp
+	echo 'sysPassword=oracle' >> ${basedir}/dbca.rsp
+	echo 'systemPassword=oracle' >> ${basedir}/dbca.rsp
+	echo 'serviceUserPassword=' >> ${basedir}/dbca.rsp
+	echo 'emConfiguration=' >> ${basedir}/dbca.rsp
+	echo 'emExpressPort=5500' >> ${basedir}/dbca.rsp
+	echo 'runCVUChecks=false' >> ${basedir}/dbca.rsp
+	echo 'dbsnmpPassword=' >> ${basedir}/dbca.rsp
+	echo 'omsHost=' >> ${basedir}/dbca.rsp
+	echo 'omsPort=0' >> ${basedir}/dbca.rsp
+	echo 'emUser=' >> ${basedir}/dbca.rsp
+	echo 'emPassword=' >> ${basedir}/dbca.rsp
+	echo 'dvConfiguration=false' >> ${basedir}/dbca.rsp
+	echo 'dvUserName=' >> ${basedir}/dbca.rsp
+	echo 'dvUserPassword=' >> ${basedir}/dbca.rsp
+	echo 'dvAccountManagerName=' >> ${basedir}/dbca.rsp
+	echo 'dvAccountManagerPassword=' >> ${basedir}/dbca.rsp
+	echo 'olsConfiguration=false' >> ${basedir}/dbca.rsp
+	echo 'datafileJarLocation=' >> ${basedir}/dbca.rsp
+	echo 'datafileDestination=' >> ${basedir}/dbca.rsp
+	echo 'recoveryAreaDestination=' >> ${basedir}/dbca.rsp
+	echo 'storageType=' >> ${basedir}/dbca.rsp
+	echo 'diskGroupName=' >> ${basedir}/dbca.rsp
+	echo 'asmsnmpPassword=' >> ${basedir}/dbca.rsp
+	echo 'recoveryGroupName=' >> ${basedir}/dbca.rsp
+	echo 'characterSet='${InCharacter} >> ${basedir}/dbca.rsp
+	echo 'nationalCharacterSet=AL16UTF16' >> ${basedir}/dbca.rsp
+	echo 'registerWithDirService=false' >> ${basedir}/dbca.rsp
+	echo 'dirServiceUserName=' >> ${basedir}/dbca.rsp
+	echo 'dirServicePassword=' >> ${basedir}/dbca.rsp
+	echo 'walletPassword=' >> ${basedir}/dbca.rsp
+	echo 'listeners=' >> ${basedir}/dbca.rsp
+	echo 'variablesFile=' >> ${basedir}/dbca.rsp
+	echo 'variables=DB_UNIQUE_NAME='${orasid}',ORACLE_BASE='${orabase}',PDB_NAME=,DB_NAME='${orasid}',ORACLE_HOME='${orahome}',SID='${orasid} >> ${basedir}/dbca.rsp
+	echo 'initParams=undo_tablespace=UNDOTBS1,processes=1000,nls_language=AMERICAN,pga_aggregate_target='${pga}'MB,sga_target='${sga}'MB,dispatchers=(PROTOCOL=TCP) (SERVICE=orclXDB),db_block_size=8192BYTES,diagnostic_dest={ORACLE_BASE},audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,nls_territory=AMERICA,compatible=12.2.0,control_files=("{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control01.ctl", "{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control02.ctl"),db_name='${orasid}',audit_trail=db,remote_login_passwordfile=EXCLUSIVE,open_cursors=300' >> ${basedir}/dbca.rsp
+	echo 'sampleSchema=false' >> ${basedir}/dbca.rsp
+	echo 'memoryPercentage='${perusemom} >> ${basedir}/dbca.rsp
+	echo 'databaseType=MULTIPURPOSE' >> ${basedir}/dbca.rsp
+	echo 'automaticMemoryManagement=false' >> ${basedir}/dbca.rsp
+	echo 'totalMemory=0' >> ${basedir}/dbca.rsp
+	chown oracle:oinstall ${basedir}/dbca.rsp
 }
 
 ####################################################################################
 #obtain datafile destination
 ####################################################################################
 ObtainDatafileDir(){
-	echo -e "Default datafile directory is ${c_yellow}${orabase}/oradata/${orasid}${c_end}"
+	echo -e "Default datafile directory is ${c_red}${orabase}/oradata/${orasid}${c_end}"
 	while true
 	do
-		read -p "`echo -e "You can specify another directory.Do you sure change datafile directory.default no .${c_yellow}yes/no ${c_end} :"`" ans
+		read -p "`echo -e "You can specify another directory.Do you sure change datafile directory.default no .${c_red}yes/no ${c_end} :"`" ans
 		if [ "${ans:-no}" == "yes" ];then
 			while true
 			do
@@ -421,8 +503,8 @@ ObtainDatafileDir(){
 					echo "The directory must be specified."
 					continue
 				else
-					echo -e "The datafile directory is ${c_yellow}${datafiledir}${c_end}."
-					read -p "`echo -e "Are you sure? Default yes. ${c_yellow}yes/no${c_end} :"`" ans2
+					echo -e "The datafile directory is ${c_red}${datafiledir}${c_end}."
+					read -p "`echo -e "Are you sure? Default yes. ${c_red}yes/no${c_end} :"`" ans2
 					if [ "${ans2:-yes}" == "yes" ];then
 						break
 					else
@@ -447,7 +529,7 @@ ObtainInstanceOption(){
 	echo -e ""
 	while true
 	do
-		read -p "`echo -e "Do you want to install the database instance.${c_yellow}yes/no ${c_end} :"`" installoption
+		read -p "`echo -e "Do you want to install the database instance.${c_red}yes/no ${c_end} :"`" installoption
 		if [ "${installoption:-None}" == "None" ];then
 			echo "Please enter yes or no."
 			continue
@@ -477,7 +559,7 @@ InstallRdbms(){
 		if [[ "${installRes}" = "Successfully" ]];then
 			${basedir}/app/oraInventory/orainstRoot.sh
 			${orahome}/root.sh
-			echo -e "${c_yellow} RDBMS has been installed.${c_end}"
+			echo -e "${c_red} RDBMS has been installed.${c_end}"
 			break
 		else
 			sleep 20s
@@ -496,7 +578,7 @@ InstallInstance(){
 		if [[ "${installRes}" = "Successfully" ]];then
 			#create instance
 			if [ "${datafiledir}" == "default" ];then
-				su - oracle -c "dbca -silent -responseFile ${basedir}/dbca.rsp -cloneTemplate"
+				su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp"
 			elif [ -n "${datafiledir}" ];then
 				if [ -d ${datafiledir} ];then
 					chown oracle:oinstall ${datafiledir}
@@ -504,11 +586,11 @@ InstallInstance(){
 					mkdir ${datafiledir}
 					chown oracle:oinstall ${datafiledir}
 				fi
-				su - oracle -c "dbca -silent -responseFile ${basedir}/dbca.rsp -cloneTemplate -datafileDestination ${datafiledir}"
+				su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp -datafileDestination ${datafiledir}"
 			else
 				ObtainDatafileDir
 				if [ "${datafiledir:-none}" == "none" ];then
-					su - oracle -c "dbca -silent -responseFile ${basedir}/dbca.rsp -cloneTemplate"
+					su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp "
 				else
 					if [ -d ${datafiledir} ];then
 						chown oracle:oinstall ${datafiledir}
@@ -516,7 +598,7 @@ InstallInstance(){
 						mkdir ${datafiledir}
 						chown oracle:oinstall ${datafiledir}
 					fi
-					su - oracle -c "dbca -silent -responseFile ${basedir}/dbca.rsp -cloneTemplate -datafileDestination ${datafiledir}"
+					su - oracle -c "dbca -silent -createDatabase -responseFile ${basedir}/dbca.rsp  -datafileDestination ${datafiledir}"
 				fi
 			fi
 			break
@@ -562,7 +644,6 @@ InitialPara(){
 	alter system set session_cached_cursors=100 scope=spfile;
 	alter system set processes=1000 scope=spfile;
 	alter system set sessions=1000 scope=spfile;
-	alter system set sec_case_sensitive_logon=false;
 	ALTER SYSTEM SET \"_use_adaptive_log_file_sync\"= false;
 	exit
 	RAY"
@@ -579,12 +660,12 @@ InitialPara(){
 #install function
 ####################################################################################
 InstallFun(){
+	InstallRPM
 	StopFirewallAndDisableSelinux
 	ObtainBasedir
 	ObtainIP
 	ObtainBasicInfo
 	CheckSwap
-	InstallRPM
 	CreateGUAndEditprofile
 	EditParaFiles
 	EditRdbmsRspFiles
@@ -594,14 +675,9 @@ InstallFun(){
 	elif [ "${installoption:-None}" == "None" ];then
 		ObtainInstanceOption
 	fi
-	#if [ `egrep "server" database/stage/config.xml | awk -F '[ =]+' '/COMP/{print $5}' | awk -F'[."]' '{print $2"."$3}'` == "12.1" ];then
-	#	EditDbca121RspFiles
-	#elif [ `egrep "server" database/stage/config.xml | awk -F '[ =]+' '/COMP/{print $5}' | awk -F'[."]' '{print $2"."$3}'` == "12.2" ];then
-	#	EditDbca122RspFiles
-	#fi
-	EditDbca121RspFiles
 	ObtainMemPerc
 	ObtainSID
+	EditDbca122RspFiles
 	InstallInstance
 	ConfigListen
 	ConfigTnsnames
