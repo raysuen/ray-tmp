@@ -3,6 +3,7 @@
 #v02
 #
 #characterSet function are new set.
+#Added the codes to generate local yum sources
 #
 #################################################################################
 #Before exec this script:

@@ -3,7 +3,16 @@
 #v1.0
 
 
-DefaultUserPWD="Cn00c3663"
+#################################################################################
+#执行脚本前：
+#   1. 挂载ISO
+#	2. 设置好主机名
+#执行脚本后：
+#	1. 手动绑定磁盘
+#################################################################################
+
+
+DefaultUserPWD="Cn00c36663"  #set a password for grid and oracle
 
 
 ####################################################################################
@@ -329,4 +338,19 @@ CreateKeygen(){
 	echo -e "\e[1;33m	scp ~/.ssh/authorized_keys OtherNode:~/.ssh/authorized_keys\e[0m" 
 }
 
-
+####################################################################################
+#create keygen
+####################################################################################
+EditHostsFile(){
+	echo "internet name:"
+	for i in `ip addr | egrep "^[0-9]" | awk -F ':' '{print $2}'`
+	do
+        IPtemp=`ifconfig $i | egrep -v "inet6" | awk -F 'net|netmaskt' '{print $2}' | sed ':label;N;s/\n//;b label' | sed -e 's/ //g' -e 's/)//g'`
+        printf "%10s : %-20s\n" $i ${IPtemp}
+        #echo -e "      \e[1;33m"$i": "`ifconfig $i | egrep -v "inet6" | awk -F 'net|netmaskt' '{print $2}' | sed ':label;N;s/\n//;b label' | sed -e 's/ //g' -e 's/)//g'`"\e[0m"
+	done
+	while true
+	do
+		read -p "`echo -e "\e[1;33mPlease enter internet name:  \e[0m"`" NodeNum
+	done
+}
