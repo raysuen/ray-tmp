@@ -2,7 +2,7 @@
 #by raysuen
 #v02
 #
-#password function and characterSet function are new set.
+#characterSet function are new set.
 #
 #################################################################################
 #Before exec this script:
@@ -15,14 +15,16 @@
 
 export LANG=C
 
+c_yellow="\e[1;33m"
+c_red="\e[1;31m"
+c_end="\e[0m"
+
 #################################################################################
 #before the bash you must install necessary rpm for oracle and edit hostname    #
 #################################################################################
-echo "please confirm that you have put the script and software into the base dir"
+
 echo ""
-c_red="\e[1;33m"
-c_red="\e[1;31m"
-c_end="\e[0m"
+echo -e "${c_red}please confirm that you have put the script and software into the base dir.${c_end}"
 echo ""
 
 ####################################################################################
@@ -267,7 +269,7 @@ CreateGUAndEditprofile(){
 	####################################################################################
 	su - oracle -c "cp /home/oracle/.bash_profile /home/oracle/.bash_profile${daytime}.bak"
 	su - oracle -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/oracle/.bash_profile"
-	su - oracle -c "echo \"#OraConfBegin\" /home/oracle/.bash_profile"
+	su - oracle -c "echo \"#OraConfBegin\" >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_BASE='${orabase} >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_HOME='${orahome} >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_SID=' >> /home/oracle/.bash_profile"
@@ -275,7 +277,7 @@ CreateGUAndEditprofile(){
 	su - oracle -c "echo 'export PATH=\$PATH:\$HOME/bin:\$ORACLE_HOME/bin' >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'export NLS_LANG=AMERICAN_AMERICA.AL32UTF8' >> /home/oracle/.bash_profile"           #AL32UTF8,ZHS16GBK
 	su - oracle -c "echo 'export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$ORACLE_HOME/lib' >> /home/oracle/.bash_profile"
-	su - oracle -c "echo \"#OraConfEnd\" /home/oracle/.bash_profile"
+	su - oracle -c "echo \"#OraConfEnd\" >> /home/oracle/.bash_profile"
 	
 }
 
@@ -699,76 +701,78 @@ InstallFun(){
 }
 
 ####################################################################################
+#begin to install
+####################################################################################
+InstallFun
+
+####################################################################################
 #The entry of the script
 ####################################################################################
 
 #
 #obtain the values of parameters
 #
-while (($#>=1))
-do
-	#
-	#to sure is the parameter start with --
-	#
-	if [ `echo $1 | egrep "^--"` ];then
-		if [ "$1" == "--usedefaultdatapath" ];then
-			datafiledir="default"
-			shift
-			continue
-		fi 
-		if [ "$1" == "--notinstallinstance" ];then
-			installoption=no
-			shift
-			continue
-		fi
-		pastpara=$1
-		shift
-		if [ `echo $1 | egrep "^--"` ];then
-			echo "The value of ${pastpara} must be specified!"
-			exit 99
-		fi
+#while (($#>=1))
+#do
+#	#
+#	#to sure is the parameter start with --
+#	#
+#	if [ `echo $1 | egrep "^--"` ];then
+#		if [ "$1" == "--usedefaultdatapath" ];then
+#			datafiledir="default"
+#			shift
+#			continue
+#		fi 
+#		if [ "$1" == "--notinstallinstance" ];then
+#			installoption=no
+#			shift
+#			continue
+#		fi
+#		pastpara=$1
+#		shift
+#		if [ `echo $1 | egrep "^--"` ];then
+#			echo "The value of ${pastpara} must be specified!"
+#			exit 99
+#		fi
+#
+#		case `echo $pastpara | sed s/--//g` in
+#			listeninterface)
+#				eth=$1
+#			;;
+#			basedirectory)
+#				basedir=$1
+#			;;
+#			oraclesid)
+#				osid=$1
+#			;;
+#			memorypercent)
+#				mper=$1
+#				if [ -n "`echo ${mper} | sed 's/[0-9]//g' | sed 's/-//g'`" ];then
+#    				echo -e "please enter ${c_red}exact number${c_end} for $pastpara"
+#    				exit 97
+#  				fi
+#			;;
+#			oraclesoftname)
+#				oraname=$1
+#			;;
+#			datafilepath)
+#				datafiledir=$1
+#			;;
+#			help)
+#				help_fun
+#				exit 0
+#			;;
+#			*)
+#				echo "$lastpara is a illegal parameter!"
+#				exit 98
+#			;;
+#		esac
+#	else
+#		shift
+#		continue
+#	fi
+#
+#done
 
-		case `echo $pastpara | sed s/--//g` in
-			listeninterface)
-				eth=$1
-			;;
-			basedirectory)
-				basedir=$1
-			;;
-			oraclesid)
-				osid=$1
-			;;
-			memorypercent)
-				mper=$1
-				if [ -n "`echo ${mper} | sed 's/[0-9]//g' | sed 's/-//g'`" ];then
-    				echo -e "please enter ${c_red}exact number${c_end} for $pastpara"
-    				exit 97
-  				fi
-			;;
-			oraclesoftname)
-				oraname=$1
-			;;
-			datafilepath)
-				datafiledir=$1
-			;;
-			help)
-				help_fun
-				exit 0
-			;;
-			*)
-				echo "$lastpara is a illegal parameter!"
-				exit 98
-			;;
-		esac
-	else
-		shift
-		continue
-	fi
 
-done
-
-####################################################################################
-#begin to install
-####################################################################################
-InstallFun
 

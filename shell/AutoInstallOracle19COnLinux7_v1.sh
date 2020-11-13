@@ -1,18 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v02
-#
-#password function and characterSet function are new set.
-#
-#################################################################################
-#Before exec this script:
-#    You must unzip the software to base dir. example: My base dir is /u01.
-#	 You must mount the OS ISO ,then you must sure can exec yum
-#Attention: all password is "oracle" that is used by the new users appearing
-#           after the script.
-#################################################################################
-
-
+#v01
 
 export LANG=C
 
@@ -111,37 +99,6 @@ ObtainSID(){
 	source ~/.bash_profile
 	
 }
-
-####################################################################################
-#obtain the characterSet for instance
-####################################################################################
-ObtainCharacter(){
-	if [ "${Inchar:-None}" == "None" ];then
-		echo "please enter the characterSet for your instance."
-		echo "(1) ZHS16GBK"
-		echo "(2) AL32UTF8"
-		while true
-		do
-			read -p "`echo -e ".Please enter 1 or 2 to choose character: "`" Inchar
-			if [ ! ${Inchar} ];then
-				echo "You must enter 1 or 2 to choose the character."
-				continue
-			elif [ ${Inchar} -eq 1 ];then
-				InCharacter=ZHS16GBK  #this is character of instance. 
-				break
-			elif [ ${Inchar} -eq 2 ];then
-				InCharacter=AL32UTF8  #this is character of instance. 
-				break
-			else
-				echo "You must enter 1 or 2 to choose the character."
-				continue
-			fi
-			
-			
-		done
-	fi 
-}
-
 
 ####################################################################################
 #obtain the momery percentage of the oracle using server momery
@@ -441,34 +398,6 @@ EditRdbmsRspFiles(){
 
 }
 
-
-####################################################################################
-#obtain install instance options
-####################################################################################
-ObtainInstanceOption(){
-	echo -e ""
-	while true
-	do
-		read -p "`echo -e "Do you want to install the database instance.${c_red}yes/no ${c_end} :"`" installoption
-		if [ "${installoption:-None}" == "None" ];then
-			echo "Please enter yes or no."
-			continue
-			
-		elif [ "${installoption:-None}" == "no" ];then
-			exit 0
-		elif [ "${installoption:-None}" == "yes" ];then
-			break
-		else
-			echo "Please enter valid value. yes/no."
-			continue
-		fi
-	done
-}
-
-
-####################################################################################
-#install RDBMS function
-####################################################################################
 InstallRdbms(){
 	if [ ! -f "${basedir}/LINUX.X64_193000_db_home.zip" ];then
         echo "Database file not exists.Please ensure you have uploaded."
@@ -542,7 +471,7 @@ ObtainSID(){
 ####################################################################################
 #edit dbca 122 rsp files
 ####################################################################################
-EditDbca19CspFiles(){
+EditDbca18CspFiles(){
 	####################################################################################
 	#edit responseFile of instance
 	####################################################################################
@@ -597,7 +526,7 @@ EditDbca19CspFiles(){
 	echo 'diskGroupName=' >> ${basedir}/dbca.rsp
 	echo 'asmsnmpPassword=' >> ${basedir}/dbca.rsp
 	echo 'recoveryGroupName=' >> ${basedir}/dbca.rsp
-	echo 'characterSet='${InCharacter} >> ${basedir}/dbca.rsp
+	echo 'characterSet=AL32UTF8' >> ${basedir}/dbca.rsp
 	echo 'nationalCharacterSet=AL16UTF16' >> ${basedir}/dbca.rsp
 	echo 'registerWithDirService=false' >> ${basedir}/dbca.rsp
 	echo 'dirServiceUserName=' >> ${basedir}/dbca.rsp
@@ -606,7 +535,7 @@ EditDbca19CspFiles(){
 	echo 'listeners=   ' >> ${basedir}/dbca.rsp
 	echo 'variablesFile=' >> ${basedir}/dbca.rsp
 	echo 'variables=ORACLE_BASE_HOME='${orahome}',DB_UNIQUE_NAME='${orasid}',ORACLE_BASE='${orabase}',PDB_NAME=,DB_NAME='${orasid}',ORACLE_HOME='${orahome}',SID='${orasid} >> ${basedir}/dbca.rsp
-	echo 'initParams=undo_tablespace=UNDOTBS1,db_block_size=8192BYTES,nls_language=AMERICAN,dispatchers=(PROTOCOL=TCP) (SERVICE=testXDB),diagnostic_dest={ORACLE_BASE},control_files=("{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control01.ctl", "{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control02.ctl"),remote_login_passwordfile=EXCLUSIVE,audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,processes=300,nls_territory=AMERICA,local_listener=LISTENER_TEST,pga_aggregate_target='${pga}'MB,sga_target='${sga}'MB,open_cursors=1000,compatible=18.0.0,db_name='${orasid}',audit_trail=db' >> ${basedir}/dbca.rsp
+	echo 'initParams=undo_tablespace=UNDOTBS1,db_block_size=8192BYTES,nls_language=AMERICAN,dispatchers=(PROTOCOL=TCP) (SERVICE=testXDB),diagnostic_dest={ORACLE_BASE},control_files=("{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control01.ctl", "{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control02.ctl"),remote_login_passwordfile=EXCLUSIVE,audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,processes=300,nls_territory=AMERICA,local_listener=LISTENER_TEST,pga_aggregate_target='${pga}'MB,sga_target='${sga}'MB,open_cursors=1000,compatible=18.0.0,db_name=test,audit_trail=db' >> ${basedir}/dbca.rsp
 	echo 'sampleSchema=false' >> ${basedir}/dbca.rsp
 	echo 'memoryPercentage='${perusemom} >> ${basedir}/dbca.rsp
 	echo 'databaseType=MULTIPURPOSE' >> ${basedir}/dbca.rsp
@@ -757,15 +686,15 @@ InstallFun(){
 	EditParaFiles
 	EditRdbmsRspFiles
 	InstallRdbms
-	if [ "${installoption}" == "no" ];then
-		exit 0
-	elif [ "${installoption:-None}" == "None" ];then
-		ObtainInstanceOption
-	fi
+	#if [ "${installoption}" == "no" ];then
+	#	exit 0
+	#elif [ "${installoption:-None}" == "None" ];then
+	#	ObtainInstanceOption
+	#fi
 	ObtainInstanceOption
 	ObtainMemPerc
 	ObtainSID
-	EditDbca19CspFiles
+	EditDbca18CspFiles
 	InstallInstance
 	ConfigListen
 	ConfigTnsnames

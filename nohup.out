@@ -1,0 +1,497 @@
+objc[18227]: Class AFHTTPSessionManager is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065008) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3140). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFNetworkReachabilityManager is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106064f68) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e31e0). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFSecurityPolicy is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106064fb8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3230). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFQueryStringPair is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065148) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3280). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFHTTPRequestSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065198) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e32d0). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFStreamingMultipartFormData is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060651c0) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e32f8). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFMultipartBodyStream is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065210) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3348). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFHTTPBodyPart is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065238) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3370). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFJSONRequestSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060652d8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3410). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFPropertyListRequestSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065328) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3460). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFHTTPResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065378) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e34b0). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFJSONResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060653c8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3500). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFXMLParserResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065418) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3550). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFXMLDocumentResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065468) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e35a0). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFPropertyListResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060654b8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e35f0). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFImageResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065508) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3640). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFCompoundResponseSerializer is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065558) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3690). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFURLSessionManagerTaskDelegate is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x106065058) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e36e0). One of the two will be used. Which one is undefined.
+objc[18227]: Class _AFURLSessionTaskSwizzling is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060650d0) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3758). One of the two will be used. Which one is undefined.
+objc[18227]: Class AFURLSessionManager is implemented in both /Applications/WeChat.app/Contents/Frameworks/AFNetworking.framework/Versions/A/AFNetworking (0x1060650f8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e3780). One of the two will be used. Which one is undefined.
+objc[18227]: Class MarsReachability is implemented in both /Applications/WeChat.app/Contents/Frameworks/matrixreport.framework/Versions/A/matrixreport (0x10613e7b8) and /Applications/WeChat.app/Contents/MacOS/WeChat (0x1051e80f0). One of the two will be used. Which one is undefined.
+2020-11-09 16:51:53.254 WeChat[18227:2153398] Event: kMMLoginEventUseOneClickLogin, from state: stateStart to state: stateShowingOneClick
+2020-11-09 16:52:21.052 WeChat[18227:2153398] Event: kMMLoginEventUnlinkOneClick, from state: stateShowingOneClick to state: stateStart
+2020-11-09 16:52:21.074 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-09 16:52:21.175 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-09 16:52:31.836 WeChat[18227:2153398] Event: kMMLoginEventQRCodeScanned, from state: stateShowingQRCode to state: stateWaittingConfirm
+2020-11-09 16:52:36.445 WeChat[18227:2153398] Event: kMMLoginEventConfirmQRCodeLogin, from state: stateWaittingConfirm to state: stateLoggingIn
+<CFData 0x7fe3dd7dcc40 [0x7fff852c0cc0]>{length = 6, capacity = 6, bytes = 0x8c85903b38ec}
+2020-11-09 16:52:37.215 WeChat[18227:2153398] Event: kMMLoginEventSendInitCGI, from state: stateLoggingIn to state: stateInitializingData
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+<CFData 0x7fe3d96845b0 [0x7fff852c0cc0]>{length = 6, capacity = 6, bytes = 0x8c85903b38ec}
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+2020-11-09 16:53:10.305 WeChat[18227:2153398] This NSLayoutConstraint is being configured with a constant that exceeds internal limits.  A smaller value will be substituted, but this problem should be fixed. Break on BOOL _NSLayoutConstraintNumberExceedsLimit(void) to debug.  This will be logged only once.  This may break in the future.
+[SQLITERK_OK] Saved master info with 8 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+[SQLITERK_OK] Saved master info with 12 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+2020-11-10 05:58:55.024 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 05:58:55.482 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:03:12.540 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:03:12.550 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:03:12.750 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:07:38.923 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:07:38.937 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:07:39.157 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:11:53.669 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:11:53.682 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:11:53.911 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:16:08.679 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:16:08.693 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:16:08.914 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:20:10.840 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:20:10.853 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:20:11.070 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:24:23.670 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:24:23.683 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:24:23.867 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:28:32.487 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:28:32.495 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:28:32.676 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:32:45.074 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:32:45.087 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:32:45.276 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:37:05.342 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:37:05.355 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:37:05.526 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:41:14.905 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:41:14.919 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:41:15.133 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:45:21.274 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:45:21.287 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:45:21.482 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:49:32.397 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:49:32.405 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:49:32.587 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:53:53.674 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:53:53.688 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:53:53.848 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 06:58:12.693 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 06:58:12.705 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 06:58:12.901 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:02:18.679 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:02:18.692 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:02:18.905 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:06:22.408 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:06:22.421 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:06:22.655 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:10:32.440 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:10:32.450 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:10:32.658 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:14:41.445 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:14:41.458 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:14:41.657 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:18:57.545 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:18:57.554 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:18:57.760 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:23:14.899 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:23:14.912 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:23:15.122 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:27:32.728 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:27:32.736 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:27:32.925 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:31:52.478 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:31:52.492 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:31:52.678 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:35:53.673 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:35:53.687 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:35:53.875 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:40:12.683 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:40:12.697 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:40:12.877 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:44:15.729 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:44:15.742 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:44:15.932 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:48:32.600 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:48:32.610 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:48:32.784 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:52:52.683 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:52:52.696 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:52:53.013 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 07:56:54.575 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 07:56:54.582 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 07:56:54.745 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:01:14.809 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:01:14.823 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:01:14.999 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:05:32.539 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:05:32.548 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:05:32.749 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:09:42.300 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:09:42.314 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:09:42.504 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:13:47.587 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:13:47.600 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:13:47.803 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:18:07.875 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:18:07.888 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:18:08.065 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:22:39.143 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:22:39.152 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:22:39.319 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:26:43.519 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:26:43.528 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:26:43.717 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:30:53.681 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:30:53.694 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:30:53.873 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:35:12.603 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:35:12.611 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:35:12.826 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:39:18.322 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:39:18.335 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:39:18.523 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:43:36.045 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:43:36.055 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:43:36.234 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:47:55.537 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:47:55.547 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:47:55.850 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:52:19.674 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:52:19.685 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:52:19.890 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 08:56:39.965 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 08:56:39.978 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 08:56:40.142 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:00:55.800 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:00:55.809 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:00:56.043 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:04:58.685 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:04:58.698 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:04:58.897 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:09:13.979 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:09:13.989 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:09:14.196 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:13:15.181 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:13:15.194 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:13:15.403 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:17:15.491 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:17:15.505 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:17:15.707 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:21:23.444 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:21:23.458 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:21:23.660 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:25:38.741 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:25:38.754 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:25:38.967 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:29:54.040 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:29:54.056 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:29:54.262 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:34:09.341 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:34:09.354 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:34:09.567 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:38:24.646 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:38:24.659 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:38:24.874 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:42:39.951 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:42:39.965 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:42:40.174 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:46:55.261 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:46:55.274 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:46:55.481 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:51:10.558 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:51:10.571 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:51:10.776 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:55:12.595 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:55:12.608 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:55:12.781 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 09:59:23.672 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 09:59:23.685 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 09:59:23.890 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 10:03:27.228 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 10:03:27.238 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 10:03:27.437 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 10:07:42.508 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 10:07:42.520 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 10:07:42.697 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 10:12:02.408 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 10:12:02.421 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 10:12:02.597 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 10:16:17.674 WeChat[18227:2153398] Event: kMMLoginEventCancelLogin, from state: stateShowingQRCode to state: stateStart
+2020-11-10 10:16:17.769 WeChat[18227:2153398] Event: kMMLoginEventUseQRCodeLogin, from state: stateStart to state: stateLoadingQRCode
+2020-11-10 10:16:17.946 WeChat[18227:2153398] Event: kMMLoginEventLoadQRCodeSucc, from state: stateLoadingQRCode to state: stateShowingQRCode
+2020-11-10 10:18:29.787 WeChat[18227:2153398] Event: kMMLoginEventQRCodeScanned, from state: stateShowingQRCode to state: stateWaittingConfirm
+2020-11-10 10:18:31.517 WeChat[18227:2153398] Event: kMMLoginEventConfirmQRCodeLogin, from state: stateWaittingConfirm to state: stateLoggingIn
+<CFData 0x7fe3ddf631a0 [0x7fff852c0cc0]>{length = 6, capacity = 6, bytes = 0x8c85903b38ec}
+[SQLITERK_OK] Saved master info with 12 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+<CFData 0x7fe3da8c08e0 [0x7fff852c0cc0]>{length = 6, capacity = 6, bytes = 0x8c85903b38ec}
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 0 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+2020-11-10 16:26:38.878 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"7EBAA647-321B-4F6B-B4AB-D6D48AB164D2\"}"
+)
+2020-11-10 16:26:38.894 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"brandIcon\":\"https://mat1.gtimg.com/www/js/news/news-webview-logo-new.png\",\"__context_key\":\"9050b915a321ded4b90e444fa251b4f202115c68\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-10 16:26:38.989 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqsports\",\"packageUrl\":\"qqsports://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-10 16:26:38.989 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.weishi\",\"packageUrl\":\"weishi://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-10 16:26:38.990 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-10 16:26:38.991 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-10 16:26:38.992 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqlive\",\"packageUrl\":\"\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-10 16:26:38.992 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.reading\",\"packageUrl\":\"qnreading://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-10 16:26:38.993 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news\",\"packageUrl\":\"qqnews://\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-10 16:26:38.993 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-10 16:26:38.998 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"ee896bf65ca7f1c0f2cb1307e6742a73d7265c17\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+2020-11-10 16:27:19.025 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"C94C2A48-30B4-431C-A32E-31304C325C33\"}"
+)
+2020-11-10 16:27:19.936 WeChat[18227:2153398] (
+    "{\"func\":\"setNavigationBarColor\",\"params\":{\"color\":\"#ffffff\",\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-10 16:27:19.937 WeChat[18227:2153398] (
+    "{\"func\":\"setBounceBackground\",\"params\":{\"backgroundColor\":\"#ffffff\",\"footerBounceColor\":\"#f2f2f2\",\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-10 16:27:19.954 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"userName\":\"gh_7157145fdfbb\",\"brandName\":\"\U5929\U6d25\U5e02\U5317\U8fb0\U533a\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"brandIcon\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"topBarStyle\":0,\"topBarShowed\":false,\"isMenuShowBrandInfo\":1,\"cover\":\"https://mmbiz.qlogo.cn/sz_mmbiz_jpg/bHvW1s1PRjiahMOgPr5IalsA3rhJ1YcjS8IeMLqaYdQydJhriaK0yddaj1GCFVAWgOSicYibVubbVodsyKSHmoI35Q/0?wx_fmt=jpeg\",\"digest\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"itemShowType\":\"0\",\"isPaySubscribe\":0,\"forbidForward\":0,\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-10 16:27:19.956 WeChat[18227:2153398] (
+    "{\"func\":\"createWebViewForFastLoad\",\"params\":{\"scene\":1,\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-10 16:27:19.958 WeChat[18227:2153398] (
+    "{\"func\":\"hideToolbar\",\"params\":{\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-10 16:27:19.959 WeChat[18227:2153398] (
+    "{\"func\":\"showOptionMenu\",\"params\":{\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-10 16:27:19.989 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-10 16:27:20.203 WeChat[18227:2153398] (
+    "{\"func\":\"handleHaokanAction\",\"params\":{\"imgUrl\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"link\":\"http://mp.weixin.qq.com/s?__biz=MzU3OTM5MDMxMA==&mid=2247489759&idx=1&sn=e74409b9f2dbdfb780555bb8b55d7144&chksm=fd6786d6ca100fc0a8b75db6d0f99bd6254e0f95520d1dbf686cc3a21c525a5a8167c5a95eba#rd\",\"desc\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"action\":\"update_recommend_status\",\"permission\":1,\"recommend\":0,\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-10 16:27:20.896 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"4e12ead6f56dc28744ed2f29d7918085ab2b7f1e\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-10 16:27:20.904 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"c89375739a224fa9f08ab018940078c2cefd4b4d\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+2020-11-10 16:28:04.145 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"userName\":\"gh_7157145fdfbb\",\"brandName\":\"\U5929\U6d25\U5e02\U5317\U8fb0\U533a\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"brandIcon\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"topBarStyle\":0,\"topBarShowed\":false,\"isMenuShowBrandInfo\":1,\"cover\":\"https://mmbiz.qlogo.cn/sz_mmbiz_jpg/bHvW1s1PRjiahMOgPr5IalsA3rhJ1YcjS8IeMLqaYdQydJhriaK0yddaj1GCFVAWgOSicYibVubbVodsyKSHmoI35Q/0?wx_fmt=jpeg\",\"digest\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"itemShowType\":\"0\",\"isPaySubscribe\":0,\"forbidForward\":0,\"__context_key\":\"c89375739a224fa9f08ab018940078c2cefd4b4d\"},\"__msg_type\":\"call\",\"__callback_id\":\"1010\"}"
+)
+2020-11-10 16:28:43.712 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"0291A992-B284-4E14-8C1F-9589478DD903\"}"
+)
+2020-11-10 16:28:43.758 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-10 16:28:43.815 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-10 16:28:43.820 WeChat[18227:2153398] (
+    "{\"func\":\"setNavigationBarColor\",\"params\":{\"color\":\"#ffffff\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-10 16:28:43.821 WeChat[18227:2153398] (
+    "{\"func\":\"setBounceBackground\",\"params\":{\"backgroundColor\":\"#ffffff\",\"footerBounceColor\":\"#f2f2f2\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-10 16:28:43.835 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"userName\":\"gh_7157145fdfbb\",\"brandName\":\"\U5929\U6d25\U5e02\U5317\U8fb0\U533a\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"brandIcon\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"topBarStyle\":0,\"topBarShowed\":false,\"isMenuShowBrandInfo\":1,\"cover\":\"https://mmbiz.qlogo.cn/sz_mmbiz_jpg/bHvW1s1PRjiahMOgPr5IalsA3rhJ1YcjS8IeMLqaYdQydJhriaK0yddaj1GCFVAWgOSicYibVubbVodsyKSHmoI35Q/0?wx_fmt=jpeg\",\"digest\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"itemShowType\":\"0\",\"isPaySubscribe\":0,\"forbidForward\":0,\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-10 16:28:43.836 WeChat[18227:2153398] (
+    "{\"func\":\"createWebViewForFastLoad\",\"params\":{\"scene\":1,\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-10 16:28:43.839 WeChat[18227:2153398] (
+    "{\"func\":\"hideToolbar\",\"params\":{\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-10 16:28:43.839 WeChat[18227:2153398] (
+    "{\"func\":\"showOptionMenu\",\"params\":{\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-10 16:28:43.867 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-10 16:28:44.003 WeChat[18227:2153398] (
+    "{\"func\":\"handleHaokanAction\",\"params\":{\"imgUrl\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"link\":\"http://mp.weixin.qq.com/s?__biz=MzU3OTM5MDMxMA==&mid=2247489759&idx=1&sn=e74409b9f2dbdfb780555bb8b55d7144&chksm=fd6786d6ca100fc0a8b75db6d0f99bd6254e0f95520d1dbf686cc3a21c525a5a8167c5a95eba#rd\",\"desc\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"action\":\"update_recommend_status\",\"permission\":1,\"recommend\":0,\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+2020-11-10 16:36:55.667 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"userName\":\"gh_7157145fdfbb\",\"brandName\":\"\U5929\U6d25\U5e02\U5317\U8fb0\U533a\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"brandIcon\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"topBarStyle\":0,\"topBarShowed\":false,\"isMenuShowBrandInfo\":1,\"cover\":\"https://mmbiz.qlogo.cn/sz_mmbiz_jpg/bHvW1s1PRjiahMOgPr5IalsA3rhJ1YcjS8IeMLqaYdQydJhriaK0yddaj1GCFVAWgOSicYibVubbVodsyKSHmoI35Q/0?wx_fmt=jpeg\",\"digest\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"itemShowType\":\"0\",\"isPaySubscribe\":0,\"forbidForward\":0,\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1010\"}"
+)
+2020-11-10 16:36:59.957 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"userName\":\"gh_7157145fdfbb\",\"brandName\":\"\U5929\U6d25\U5e02\U5317\U8fb0\U533a\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\",\"title\":\"\U5317\U4ed3\U5c0f\U5b66\U9644\U5c5e\U5e7c\U513f\U56ed\U5e7c\U513f\U6237\U5916\U64cd\U8bc4\U6bd4\U6d3b\U52a8\U62a5\U9053\",\"brandIcon\":\"http://wx.qlogo.cn/mmhead/Q3auHgzwzM7WlJV7Vx3G4mLE6SU1hmjskiatRsPou2L78Bn989dtKkw/132\",\"topBarStyle\":0,\"topBarShowed\":false,\"isMenuShowBrandInfo\":1,\"cover\":\"https://mmbiz.qlogo.cn/sz_mmbiz_jpg/bHvW1s1PRjiahMOgPr5IalsA3rhJ1YcjS8IeMLqaYdQydJhriaK0yddaj1GCFVAWgOSicYibVubbVodsyKSHmoI35Q/0?wx_fmt=jpeg\",\"digest\":\"\U6237\U5916\U64cd\U6d3b\U52a8\U662f\U5e7c\U513f\U56ed\U4f53\U80b2\U6e38\U620f\U6d3b\U52a8\U91cd\U8981\U7684\U7ec4\U6210\U90e8\U5206\Uff0c\U662f\U5bf9\U5e7c\U513f\U8fdb\U884c\U7efc\U5408\U7d20\U8d28\U6559\U80b2\U7684\U91cd\U8981\U5185\U5bb9\Uff0c\U5176\U79d1\U5b66\U6027\U548c\U89c4\U8303\U6027\U5bf9\U5e7c\U513f\U7684\U53d1\U5c55\U8d77\U7740\U81f3\U5173\U91cd\U8981\U7684\U4f5c\U7528\U3002\",\"itemShowType\":\"0\",\"isPaySubscribe\":0,\"forbidForward\":0,\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1011\"}"
+)
+[SQLITERK_OK] Saved master info with 4 entries.
+[SQLITERK_OK] Saved master info with 4 entries.
+2020-11-11 08:41:20.501 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"0291A992-B284-4E14-8C1F-9589478DD903\"}"
+)
+2020-11-11 08:41:20.580 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"brandIcon\":\"https://mat1.gtimg.com/www/js/news/news-webview-logo-new.png\",\"__context_key\":\"10eeee644c5c3fcbdb5246c8e27d5fd937cd8ccc\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-11 08:41:21.169 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqsports\",\"packageUrl\":\"qqsports://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-11 08:41:21.172 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.weishi\",\"packageUrl\":\"weishi://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-11 08:41:21.173 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-11 08:41:21.173 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-11 08:41:21.173 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqlive\",\"packageUrl\":\"\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-11 08:41:21.176 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.reading\",\"packageUrl\":\"qnreading://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-11 08:41:21.176 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news\",\"packageUrl\":\"qqnews://\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-11 08:41:21.177 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-11 08:41:21.177 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"a1adb3aee154a4a5c35a6655b3afc022d5741c09\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+[SQLITERK_OK] Saved master info with 8 entries.
+[SQLITERK_OK] Saved master info with 8 entries.
+[SQLITERK_OK] Saved master info with 12 entries.
+2020-11-11 16:03:00.856 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"F7BB10D1-A4D7-457A-8458-9F98626F50BB\"}"
+)
+2020-11-11 16:03:00.956 WeChat[18227:2153398] (
+    "{\"func\":\"setCloseWindowConfirmDialogInfo\",\"params\":{\"switch\":\"true\",\"title_cn\":\"\U4f60\U8981\U5173\U95ed\U8d2d\U7269\U9875\U9762?\",\"title_eng\":\"Do not save the order info? \",\"ok_cn\":\"\U5173\U95ed\",\"ok_eng\":\"OK\",\"cancel_cn\":\"\U518d\U901b\U901b\",\"cancel_eng\":\"Cancel\",\"__context_key\":\"87da813f379357648b677960798740dd2c4afef0\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-11 16:03:00.959 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.jingdong.app.mall\",\"packageUrl\":\"openApp.jdMobile://\",\"__context_key\":\"87da813f379357648b677960798740dd2c4afef0\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-11 16:03:01.802 WeChat[18227:2153398] (
+    "{\"func\":\"preVerifyJSAPI\",\"params\":{\"verifyJsApiList\":[\"checkJsApi\",\"getNetworkType\",\"menu:share:timeline\",\"menu:share:appmessage\",\"menu:share:qq\",\"menu:share:weiboApp\",\"hideMenuItems\",\"showMenuItems\",\"editAddress\",\"imagePreview\",\"uploadImage\",\"downloadImage\",\"chooseImage\",\"setCloseWindowConfirmDialogInfo\",\"setPageTitle\",\"startRecord\",\"stopRecord\",\"onVoiceRecordEnd\",\"playVoice\",\"pauseVoice\",\"stopVoice\",\"onVoicePlayEnd\",\"uploadVoice\",\"geoLocation\",\"openLocation\",\"scanQRCode\",\"launchMiniProgram\",\"openWXSearchPage\",\"launchApplication\",\"getInstallState\",\"openBusinessView\",\"chooseInvoiceTitle\",\"batchViewCard\",\"hideAllNonBaseMenuItem\"],\"verifyOpenTagList\":[\"wx-open-launch-weapp\",\"wx-open-launch-app\"],\"appId\":\"wxae3e8056daea8727\",\"verifyAppId\":\"wxae3e8056daea8727\",\"verifySignType\":\"sha1\",\"verifyTimestamp\":\"1605081789\",\"verifyNonceStr\":\"1188794473\",\"verifySignature\":\"ded4dda1f106a80bb8c78286f4fdd22cb5f01b79\",\"__context_key\":\"87da813f379357648b677960798740dd2c4afef0\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-11 16:03:01.985 WeChat[18227:2153398] (
+    "{\"func\":\"checkJsApi\",\"params\":{\"jsApiList\":[\"checkJsApi\",\"getNetworkType\",\"menu:share:timeline\",\"menu:share:appmessage\",\"menu:share:qq\",\"menu:share:weiboApp\",\"hideMenuItems\",\"showMenuItems\",\"editAddress\",\"imagePreview\",\"uploadImage\",\"downloadImage\",\"chooseImage\",\"setCloseWindowConfirmDialogInfo\",\"setPageTitle\",\"startRecord\",\"stopRecord\",\"onVoiceRecordEnd\",\"playVoice\",\"pauseVoice\",\"stopVoice\",\"onVoicePlayEnd\",\"uploadVoice\",\"geoLocation\",\"openLocation\",\"scanQRCode\",\"launchMiniProgram\",\"openWXSearchPage\",\"launchApplication\",\"getInstallState\",\"openBusinessView\",\"chooseInvoiceTitle\",\"batchViewCard\",\"hideAllNonBaseMenuItem\"],\"appId\":\"wxae3e8056daea8727\",\"verifyAppId\":\"wxae3e8056daea8727\",\"verifySignType\":\"sha1\",\"verifyTimestamp\":\"1605081789\",\"verifyNonceStr\":\"1188794473\",\"verifySignature\":\"ded4dda1f106a80bb8c78286f4fdd22cb5f01b79\",\"__context_key\":\"87da813f379357648b677960798740dd2c4afef0\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-11 16:03:02.661 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"6d9b7f0caa3b08dfe867249974ca890b51d46752\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-11 16:03:08.433 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"5D946656-7313-4B43-A7A7-B35AA05E875E\"}"
+)
+2020-11-11 16:03:08.675 WeChat[18227:2153398] (
+    "{\"func\":\"setCloseWindowConfirmDialogInfo\",\"params\":{\"switch\":\"true\",\"title_cn\":\"\U4f60\U8981\U5173\U95ed\U8d2d\U7269\U9875\U9762?\",\"title_eng\":\"Do not save the order info? \",\"ok_cn\":\"\U5173\U95ed\",\"ok_eng\":\"OK\",\"cancel_cn\":\"\U518d\U901b\U901b\",\"cancel_eng\":\"Cancel\",\"__context_key\":\"e031c8555cd3e3168529e5d6c68bbd8ea5c93419\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-11 16:03:08.676 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.jingdong.app.mall\",\"packageUrl\":\"openApp.jdMobile://\",\"__context_key\":\"e031c8555cd3e3168529e5d6c68bbd8ea5c93419\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-11 16:03:08.973 WeChat[18227:2153398] (
+    "{\"func\":\"preVerifyJSAPI\",\"params\":{\"verifyJsApiList\":[\"checkJsApi\",\"getNetworkType\",\"menu:share:timeline\",\"menu:share:appmessage\",\"menu:share:qq\",\"menu:share:weiboApp\",\"hideMenuItems\",\"showMenuItems\",\"editAddress\",\"imagePreview\",\"uploadImage\",\"downloadImage\",\"chooseImage\",\"setCloseWindowConfirmDialogInfo\",\"setPageTitle\",\"startRecord\",\"stopRecord\",\"onVoiceRecordEnd\",\"playVoice\",\"pauseVoice\",\"stopVoice\",\"onVoicePlayEnd\",\"uploadVoice\",\"geoLocation\",\"openLocation\",\"scanQRCode\",\"launchMiniProgram\",\"openWXSearchPage\",\"launchApplication\",\"getInstallState\",\"openBusinessView\",\"chooseInvoiceTitle\",\"batchViewCard\",\"hideAllNonBaseMenuItem\"],\"verifyOpenTagList\":[\"wx-open-launch-weapp\",\"wx-open-launch-app\"],\"appId\":\"wxae3e8056daea8727\",\"verifyAppId\":\"wxae3e8056daea8727\",\"verifySignType\":\"sha1\",\"verifyTimestamp\":\"1605081797\",\"verifyNonceStr\":\"1978883203\",\"verifySignature\":\"97716b23d79cb992a8980ff833987cf60b36760f\",\"__context_key\":\"e031c8555cd3e3168529e5d6c68bbd8ea5c93419\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-11 16:03:09.078 WeChat[18227:2153398] (
+    "{\"func\":\"checkJsApi\",\"params\":{\"jsApiList\":[\"checkJsApi\",\"getNetworkType\",\"menu:share:timeline\",\"menu:share:appmessage\",\"menu:share:qq\",\"menu:share:weiboApp\",\"hideMenuItems\",\"showMenuItems\",\"editAddress\",\"imagePreview\",\"uploadImage\",\"downloadImage\",\"chooseImage\",\"setCloseWindowConfirmDialogInfo\",\"setPageTitle\",\"startRecord\",\"stopRecord\",\"onVoiceRecordEnd\",\"playVoice\",\"pauseVoice\",\"stopVoice\",\"onVoicePlayEnd\",\"uploadVoice\",\"geoLocation\",\"openLocation\",\"scanQRCode\",\"launchMiniProgram\",\"openWXSearchPage\",\"launchApplication\",\"getInstallState\",\"openBusinessView\",\"chooseInvoiceTitle\",\"batchViewCard\",\"hideAllNonBaseMenuItem\"],\"appId\":\"wxae3e8056daea8727\",\"verifyAppId\":\"wxae3e8056daea8727\",\"verifySignType\":\"sha1\",\"verifyTimestamp\":\"1605081797\",\"verifyNonceStr\":\"1978883203\",\"verifySignature\":\"97716b23d79cb992a8980ff833987cf60b36760f\",\"__context_key\":\"e031c8555cd3e3168529e5d6c68bbd8ea5c93419\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-11 16:03:09.106 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"2814b837eac33e0645036ed91178acf28927d832\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-12 08:33:58.746 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"078EFB91-9D19-4971-9736-C63C2A2EE05D\"}"
+)
+2020-11-12 08:33:58.761 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"brandIcon\":\"https://mat1.gtimg.com/www/js/news/news-webview-logo-new.png\",\"__context_key\":\"adc52e77d893e8f15d5948dda58bf2fae11fcc30\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-12 08:33:58.906 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqsports\",\"packageUrl\":\"qqsports://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-12 08:33:58.908 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.weishi\",\"packageUrl\":\"weishi://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-12 08:33:58.908 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-12 08:33:58.910 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-12 08:33:58.910 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqlive\",\"packageUrl\":\"\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-12 08:33:58.911 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.reading\",\"packageUrl\":\"qnreading://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-12 08:33:58.911 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news\",\"packageUrl\":\"qqnews://\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-12 08:33:58.912 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-12 08:33:58.912 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"2b76f11bd0e552ee15a2914e6c8dfa09488113c7\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+2020-11-12 08:46:50.917 WeChat[18227:2153398] (
+    "{\"__domReadyNotify\":\"BC5305DE-9A8B-496F-AF1B-7D88D114661C\"}"
+)
+2020-11-12 08:46:50.956 WeChat[18227:2153398] (
+    "{\"func\":\"currentMpInfo\",\"params\":{\"brandIcon\":\"https://mat1.gtimg.com/www/js/news/news-webview-logo-new.png\",\"__context_key\":\"57b950203a3ae806a1b7306557edb796932afd43\"},\"__msg_type\":\"call\",\"__callback_id\":\"1000\"}"
+)
+2020-11-12 08:46:51.887 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqsports\",\"packageUrl\":\"qqsports://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1001\"}"
+)
+2020-11-12 08:46:51.888 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.weishi\",\"packageUrl\":\"weishi://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1002\"}"
+)
+2020-11-12 08:46:51.891 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1003\"}"
+)
+2020-11-12 08:46:51.892 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news.lite\",\"packageUrl\":\"qqnewslite://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1004\"}"
+)
+2020-11-12 08:46:51.893 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.qqlive\",\"packageUrl\":\"\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1005\"}"
+)
+2020-11-12 08:46:51.894 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.reading\",\"packageUrl\":\"qnreading://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1006\"}"
+)
+2020-11-12 08:46:51.894 WeChat[18227:2153398] (
+    "{\"func\":\"getInstallState\",\"params\":{\"packageName\":\"com.tencent.news\",\"packageUrl\":\"qqnews://\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1007\"}"
+)
+2020-11-12 08:46:51.895 WeChat[18227:2153398] (
+    "{\"func\":\"getNetworkType\",\"params\":{\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1008\"}"
+)
+2020-11-12 08:46:51.895 WeChat[18227:2153398] (
+    "{\"func\":\"log\",\"params\":{\"msg\":\"error ReferenceError: Can't find variable: _enable_old_UrlStyleImagePreviews\",\"__context_key\":\"9df32bd0f53846ee56a386d22ab5191d0606026b\"},\"__msg_type\":\"call\",\"__callback_id\":\"1009\"}"
+)
+2020-11-12 08:47:01.535 WeChat[18227:2153398] (
+    "{\"__pageStateChange\":\"https://view.inews.qq.com/wxn2/20201111A0242C00?tbkt=E&pushid=2020111200&strategy=feature&openid=o04IBAK15g4ixTxqNLGtyKXu1_DU&uid=&refer=wx_hot&ft=0\"}"
+)

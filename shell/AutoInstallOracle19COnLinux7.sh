@@ -1,17 +1,32 @@
 #!/bin/bash
 #by raysuen
-#v01
+#v02
+#
+#characterSet function are new set.
+#
+#################################################################################
+#Before exec this script:
+#    You must put the the software --LINUX.X64_193000_db_home.zip to base dir. 
+#			example: My base dir is /u01.
+#	 You must mount the OS ISO ,then you must sure can exec yum
+#	 Attention: all password is "oracle" that is used by the new users appearing
+#           after the script.
+#################################################################################
+
+
 
 export LANG=C
 
 #################################################################################
 #before the bash you must install necessary rpm for oracle and edit hostname    #
 #################################################################################
-echo "please confirm that you have put the script and software into the base dir"
-echo ""
+
 c_yellow="\e[1;33m"
 c_red="\e[1;31m"
 c_end="\e[0m"
+
+echo ""
+echo -e "${c_red}please confirm that you have put the script and software into the base dir.${c_end}"
 echo ""
 
 ####################################################################################
@@ -99,6 +114,37 @@ ObtainSID(){
 	source ~/.bash_profile
 	
 }
+
+####################################################################################
+#obtain the characterSet for instance
+####################################################################################
+ObtainCharacter(){
+	if [ "${Inchar:-None}" == "None" ];then
+		echo "please enter the characterSet for your instance."
+		echo "(1) ZHS16GBK"
+		echo "(2) AL32UTF8"
+		while true
+		do
+			read -p "`echo -e ".Please enter 1 or 2 to choose character: "`" Inchar
+			if [ ! ${Inchar} ];then
+				echo "You must enter 1 or 2 to choose the character."
+				continue
+			elif [ ${Inchar} -eq 1 ];then
+				InCharacter=ZHS16GBK  #this is character of instance. 
+				break
+			elif [ ${Inchar} -eq 2 ];then
+				InCharacter=AL32UTF8  #this is character of instance. 
+				break
+			else
+				echo "You must enter 1 or 2 to choose the character."
+				continue
+			fi
+			
+			
+		done
+	fi 
+}
+
 
 ####################################################################################
 #obtain the momery percentage of the oracle using server momery
@@ -250,7 +296,7 @@ CreateGUAndEditprofile(){
 	####################################################################################
 	su - oracle -c "cp /home/oracle/.bash_profile /home/oracle/.bash_profile${daytime}.bak"
 	su - oracle -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/oracle/.bash_profile"
-	su - oracle -c "echo \"#OraConfBegin\" /home/oracle/.bash_profile"
+	su - oracle -c "echo \"#OraConfBegin\" >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_BASE='${orabase} >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_HOME='${orahome} >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_SID=' >> /home/oracle/.bash_profile"
@@ -258,7 +304,7 @@ CreateGUAndEditprofile(){
 	su - oracle -c "echo 'export PATH=\$PATH:\$HOME/bin:\$ORACLE_HOME/bin' >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'export NLS_LANG=AMERICAN_AMERICA.AL32UTF8' >> /home/oracle/.bash_profile"           #AL32UTF8,ZHS16GBK
 	su - oracle -c "echo 'export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$ORACLE_HOME/lib' >> /home/oracle/.bash_profile"
-	su - oracle -c "echo \"#OraConfEnd\" /home/oracle/.bash_profile"
+	su - oracle -c "echo \"#OraConfEnd\" >> /home/oracle/.bash_profile"
 	
 	
 	####################################################################################
@@ -398,6 +444,34 @@ EditRdbmsRspFiles(){
 
 }
 
+
+####################################################################################
+#obtain install instance options
+####################################################################################
+ObtainInstanceOption(){
+	echo -e ""
+	while true
+	do
+		read -p "`echo -e "Do you want to install the database instance.${c_red}yes/no ${c_end} :"`" installoption
+		if [ "${installoption:-None}" == "None" ];then
+			echo "Please enter yes or no."
+			continue
+			
+		elif [ "${installoption:-None}" == "no" ];then
+			exit 0
+		elif [ "${installoption:-None}" == "yes" ];then
+			break
+		else
+			echo "Please enter valid value. yes/no."
+			continue
+		fi
+	done
+}
+
+
+####################################################################################
+#install RDBMS function
+####################################################################################
 InstallRdbms(){
 	if [ ! -f "${basedir}/LINUX.X64_193000_db_home.zip" ];then
         echo "Database file not exists.Please ensure you have uploaded."
@@ -411,7 +485,7 @@ InstallRdbms(){
 	#follow coding are create oracle instance.if you don't want to create install instance,you can use # making coding invalidly
 	echo ' '
 	echo ' '
-	echo -e "you use the command to get information about installation:\e[1;37m tail -f ${basedir}/install.log${c_end}"
+	echo -e "you use the command to get information about installation:${c_red} tail -f ${basedir}/install.log${c_end}"
 	sleep 1m
 	echo ' '
 	while true
@@ -471,7 +545,7 @@ ObtainSID(){
 ####################################################################################
 #edit dbca 122 rsp files
 ####################################################################################
-EditDbca18CspFiles(){
+EditDbca19CspFiles(){
 	####################################################################################
 	#edit responseFile of instance
 	####################################################################################
@@ -526,7 +600,7 @@ EditDbca18CspFiles(){
 	echo 'diskGroupName=' >> ${basedir}/dbca.rsp
 	echo 'asmsnmpPassword=' >> ${basedir}/dbca.rsp
 	echo 'recoveryGroupName=' >> ${basedir}/dbca.rsp
-	echo 'characterSet=AL32UTF8' >> ${basedir}/dbca.rsp
+	echo 'characterSet='${InCharacter} >> ${basedir}/dbca.rsp
 	echo 'nationalCharacterSet=AL16UTF16' >> ${basedir}/dbca.rsp
 	echo 'registerWithDirService=false' >> ${basedir}/dbca.rsp
 	echo 'dirServiceUserName=' >> ${basedir}/dbca.rsp
@@ -535,7 +609,7 @@ EditDbca18CspFiles(){
 	echo 'listeners=   ' >> ${basedir}/dbca.rsp
 	echo 'variablesFile=' >> ${basedir}/dbca.rsp
 	echo 'variables=ORACLE_BASE_HOME='${orahome}',DB_UNIQUE_NAME='${orasid}',ORACLE_BASE='${orabase}',PDB_NAME=,DB_NAME='${orasid}',ORACLE_HOME='${orahome}',SID='${orasid} >> ${basedir}/dbca.rsp
-	echo 'initParams=undo_tablespace=UNDOTBS1,db_block_size=8192BYTES,nls_language=AMERICAN,dispatchers=(PROTOCOL=TCP) (SERVICE=testXDB),diagnostic_dest={ORACLE_BASE},control_files=("{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control01.ctl", "{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control02.ctl"),remote_login_passwordfile=EXCLUSIVE,audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,processes=300,nls_territory=AMERICA,local_listener=LISTENER_TEST,pga_aggregate_target='${pga}'MB,sga_target='${sga}'MB,open_cursors=1000,compatible=18.0.0,db_name=test,audit_trail=db' >> ${basedir}/dbca.rsp
+	echo 'initParams=undo_tablespace=UNDOTBS1,db_block_size=8192BYTES,nls_language=AMERICAN,dispatchers=(PROTOCOL=TCP) (SERVICE=testXDB),diagnostic_dest={ORACLE_BASE},control_files=("{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control01.ctl", "{ORACLE_BASE}/oradata/{DB_UNIQUE_NAME}/control02.ctl"),remote_login_passwordfile=EXCLUSIVE,audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,processes=300,nls_territory=AMERICA,local_listener=LISTENER_TEST,pga_aggregate_target='${pga}'MB,sga_target='${sga}'MB,open_cursors=1000,compatible=18.0.0,db_name='${orasid}',audit_trail=db' >> ${basedir}/dbca.rsp
 	echo 'sampleSchema=false' >> ${basedir}/dbca.rsp
 	echo 'memoryPercentage='${perusemom} >> ${basedir}/dbca.rsp
 	echo 'databaseType=MULTIPURPOSE' >> ${basedir}/dbca.rsp
@@ -686,15 +760,16 @@ InstallFun(){
 	EditParaFiles
 	EditRdbmsRspFiles
 	InstallRdbms
-	#if [ "${installoption}" == "no" ];then
-	#	exit 0
-	#elif [ "${installoption:-None}" == "None" ];then
-	#	ObtainInstanceOption
-	#fi
-	ObtainInstanceOption
+	if [ "${installoption}" == "no" ];then
+		exit 0
+	elif [ "${installoption:-None}" == "None" ];then
+		ObtainInstanceOption
+	fi
+	#ObtainInstanceOption
 	ObtainMemPerc
 	ObtainSID
-	EditDbca18CspFiles
+	ObtainCharacter
+	EditDbca19CspFiles
 	InstallInstance
 	ConfigListen
 	ConfigTnsnames
