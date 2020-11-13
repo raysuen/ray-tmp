@@ -291,7 +291,7 @@ EditUserBashprofile(){
 	su - grid -c "echo \"#OraConfBegin\" >> /home/grid/.bash_profile"
 	su - grid -c "echo 'ORACLE_BASE='${gridbase} >> /home/grid/.bash_profile"
 	su - grid -c "echo 'ORACLE_HOME='${gridhome} >> /home/grid/.bash_profile"
-	su - grid -c "echo 'ORACLE_SID=+ASM'${NodeNum} >> /home/oracle/.bash_profile"
+	su - grid -c "echo 'ORACLE_SID=+ASM'${NodeNum} >> /home/grid/.bash_profile"
 	su - grid -c "echo 'export ORACLE_BASE ORACLE_HOME ORACLE_SID' >> /home/grid/.bash_profile"
 	su - grid -c "echo 'export PATH=\$PATH:\$HOME/bin:\$ORACLE_HOME/bin' >> /home/grid/.bash_profile"
 	#su - grid -c "echo 'export NLS_LANG=AMERICAN_AMERICA.AL32UTF8' >> /home/grid/.bash_profile"           #AL32UTF8,ZHS16GBK

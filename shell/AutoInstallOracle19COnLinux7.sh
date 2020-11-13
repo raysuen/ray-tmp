@@ -174,6 +174,21 @@ ObtainMemPerc(){
 #install rpm that oracle is necessary for installing
 ####################################################################################
 InstallRPM(){
+	mountPatch=`mount | egrep "iso|ISO" | awk '{print $3}'`
+	if [ ! ${mountPatch} ];then
+		echo "The ISO file is not mounted on system."
+        exit 99
+    else
+    	sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /etc/yum.repos.d/local.repo
+    	echo "#OraConfBegin" >> /etc/yum.repos.d/local.repo
+    	echo "[server]" >> /etc/yum.repos.d/local.repo
+		echo "name=server" >> /etc/yum.repos.d/local.repo
+		echo "baseurl=file://"${mountPatch} >> /etc/yum.repos.d/local.repo
+		echo "enabled=1" >> /etc/yum.repos.d/local.repo
+		echo "gpgcheck=1" >> /etc/yum.repos.d/local.repo
+		rpm --import ${mountPatch}/RPM-GPG-KEY-redhat-release
+
+	fi
 	yum -y install bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel
 	# -y localinstall compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm 
 	#yum -y localinstall elfutils-libelf-devel-0.168-8.el7.x86_64.rpm

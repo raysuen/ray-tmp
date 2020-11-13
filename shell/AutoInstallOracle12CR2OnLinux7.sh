@@ -173,6 +173,21 @@ ObtainMemPerc(){
 #install rpm that oracle is necessary for installing
 ####################################################################################
 InstallRPM(){
+	mountPatch=`mount | egrep "iso|ISO" | awk '{print $3}'`
+	if [ ! ${mountPatch} ];then
+		echo "The ISO file is not mounted on system."
+        exit 99
+    else
+    	sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /etc/yum.repos.d/local.repo
+    	echo "#OraConfBegin" >> /etc/yum.repos.d/local.repo
+    	echo "[server]" >> /etc/yum.repos.d/local.repo
+		echo "name=server" >> /etc/yum.repos.d/local.repo
+		echo "baseurl=file://"${mountPatch} >> /etc/yum.repos.d/local.repo
+		echo "enabled=1" >> /etc/yum.repos.d/local.repo
+		echo "gpgcheck=1" >> /etc/yum.repos.d/local.repo
+		rpm --import ${mountPatch}/RPM-GPG-KEY-redhat-release
+
+	fi
 	yum -y install binutils compat-libcap1 compat-libstdc++ compat-libstdc++*.i686 gcc gcc-c++ glibc-2*.i686 glibc glibc-devel*.i686 glibc-devel ksh libgcc libgcc-*.i686 libstdc++*.i686 libstdc++ libstdc++-devel libstdc++devel*.i686 libaio-*.i686 libaio libaio-*.i686 libaio-devel libaio-devel*.i686 make sysstat unixODBC-devel unixODBC*.i686
 	# -y localinstall compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm 
 	#yum -y localinstall elfutils-libelf-devel-0.168-8.el7.x86_64.rpm
