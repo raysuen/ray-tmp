@@ -5,10 +5,13 @@
 
 #################################################################################
 #执行脚本前：
-#   1. 挂载ISO
-#	2. 设置好主机名
+#	1. 把脚本放入基础目录，例如：/u01
+#   2. 挂载ISO
+#	3. 把需要本地安装的rpm上传到基础命令
+#	4. 设置好主机名
 #执行脚本后：
-#	1. 手动绑定磁盘
+#	1. 手动绑定磁盘,或安装asmlib并创建disk
+#	2. 在hosts文件内把VIP和scan的IP修改正确，并其他节点信息添加进去
 #################################################################################
 
 
@@ -24,7 +27,7 @@ InstallRPM(){
 		echo "The ISO file is not mounted on system."
         exit 99
     else
-    	sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /etc/yum.repos.d/local.repo
+    	[ -f /etc/yum.repos.d/local.repo ] && sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /etc/yum.repos.d/local.repo
     	echo "#OraConfBegin" >> /etc/yum.repos.d/local.repo
     	echo "[server]" >> /etc/yum.repos.d/local.repo
 		echo "name=server" >> /etc/yum.repos.d/local.repo
@@ -153,6 +156,17 @@ TimeDepSet(){
 
 }
 
+####################################################################################
+#Time dependent Settings
+####################################################################################
+Stopavahi(){
+	systemctl stop avahi-daemon.socket
+	systemctl disable avahi-daemon.socket
+	systemctl stop avahi-daemon.service
+	systemctl disable avahi-daemon.service
+	ps -ef|grep avahi-daemon | egrep -v "grep" | awk '{print "kill -9 "$2}'
+
+}
 
 ####################################################################################
 #stop firefall  and disable selinux
@@ -253,7 +267,7 @@ ObtainBasedir(){
 	if [ "${basedir:-None}" == "None" ];then
 		while true
 		do
-			read -p "`echo -e "please enter the name of base dir,put this shell and software in the dir.default [${c_yellow}/u01${c_end}]: "`" bdir
+			read -p "`echo -e "please enter the name of base dir,put this shell and software in the dir.default [\e[1;33m/u01\e[0m]: "`" bdir
 			basedir=${bdir:-/u01}  #this is base dir,put this shell and software in the dir
 			if [ ! -d ${basedir} ];then
 		    	echo -e "the ${basedir} is not exsist,please ${c_red}make it up${c_end}"
@@ -296,7 +310,7 @@ EditUserBashprofile(){
 		
 	done
 	[ ! -f /home/grid/.bash_profile${daytime}.bak ] && su - grid -c "cp /home/grid/.bash_profile /home/grid/.bash_profile${daytime}.bak"
-	su - grid -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/grid/.bash_profile"
+	[ -f /home/grid/.bash_profile ] && su - grid -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/grid/.bash_profile"
 	su - grid -c "echo \"#OraConfBegin\" >> /home/grid/.bash_profile"
 	su - grid -c "echo 'ORACLE_BASE='${gridbase} >> /home/grid/.bash_profile"
 	su - grid -c "echo 'ORACLE_HOME='${gridhome} >> /home/grid/.bash_profile"
@@ -310,7 +324,7 @@ EditUserBashprofile(){
 	#edit oracle's bash
 	####################################################################################
 	[ ! -f /home/oracle/.bash_profile${daytime}.bak ] && su - oracle -c "cp /home/oracle/.bash_profile /home/oracle/.bash_profile${daytime}.bak"
-	su - oracle -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/oracle/.bash_profile"
+	[ -f home/oracle/.bash_profile ] && su - oracle -c "sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /home/oracle/.bash_profile"
 	su - oracle -c "echo \"#OraConfBegin\" >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_BASE='${orabase} >> /home/oracle/.bash_profile"
 	su - oracle -c "echo 'ORACLE_HOME='${orahome} >> /home/oracle/.bash_profile"
@@ -327,21 +341,10 @@ EditUserBashprofile(){
 ####################################################################################
 #create keygen
 ####################################################################################
-CreateKeygen(){
-	echo -e "\n\n\n\n" | ssh-keygen -t rsa
-	echo -e "\n\n\n\n" | ssh-keygen -t dsa
-	echo -e "\e[1;33mIf this is first node in RAC,you can exec following command,not ignore following.\e[0m"
-	echo -e "\e[1;33m	cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
-	echo -e "\e[1;33m	cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m"
-	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
-	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m" 
-	echo -e "\e[1;33m	scp ~/.ssh/authorized_keys OtherNode:~/.ssh/authorized_keys\e[0m" 
-}
-
-####################################################################################
-#create keygen
-####################################################################################
 EditHostsFile(){
+	####################################################################################
+	#list internet name
+	####################################################################################
 	echo "internet name:"
 	for i in `ip addr | egrep "^[0-9]" | awk -F ':' '{print $2}'`
 	do
@@ -349,8 +352,84 @@ EditHostsFile(){
         printf "%10s : %-20s\n" $i ${IPtemp}
         #echo -e "      \e[1;33m"$i": "`ifconfig $i | egrep -v "inet6" | awk -F 'net|netmaskt' '{print $2}' | sed ':label;N;s/\n//;b label' | sed -e 's/ //g' -e 's/)//g'`"\e[0m"
 	done
+	####################################################################################
+	#get public internet
+	####################################################################################
 	while true
 	do
-		read -p "`echo -e "\e[1;33mPlease enter internet name:  \e[0m"`" NodeNum
+		read -p "`echo -e "\e[1;33mPlease enter internet name for public :  \e[0m"`" PublicName
+		[ `ip addr | egrep "^[0-9]" | awk -F ':' '{print $2}' | egrep "${PublicName}"` ] && break || echo "Please enter a right internet name!!";continue
+		
 	done
+	####################################################################################
+	#get private internet
+	####################################################################################
+	while true
+	do
+		read -p "`echo -e "\e[1;33mPlease enter internet name for private :  \e[0m"`" PrivateName
+		[ `ip addr | egrep "^[0-9]" | awk -F ':' '{print $2}' | egrep "${PrivateName}"` ] && break || echo "Please enter a right internet name!!";continue
+		
+	done
+	HName=`/bin/hostname`
+	#ip add | grep ens192 | grep inet | awk '{print $2}' | awk -F"/" '{printf "%-20s'${HName}'\n",$1}'
+	sed -i '/^#OraConfBegin/,/^#OraConfEnd/d' /etc/hosts
+	echo "" >> /etc/hosts
+	echo "#OraConfBegin" >> /etc/hosts
+	echo "#public ip" >> /etc/hosts
+	ip add | grep ${PublicName} | grep inet | awk '{print $2}' | awk -F"/" '{printf "%-20s'${HName}'\n",$1}' >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "#private ip" >> /etc/hosts
+	ip add | grep ${PrivateName} | grep inet | awk '{print $2}' | awk -F"/" '{printf "%-20s'${HName}'-priv\n",$1}' >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "#Vip" >> /etc/hosts
+	ip add | grep ${PublicName} | grep inet | awk '{print $2}' | awk -F"[./]" '{printf "%-20s'${HName}'-vip\n",$1"."$2"."$3"."}' >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "#scan ip" >> /etc/hosts
+	ip add | grep ${PublicName} | grep inet | awk '{print $2}' | awk -F"[./]" '{printf "%-20sracscan\n",$1"."$2"."$3"."}' >> /etc/hosts
+	echo "" >> /etc/hosts
+	echo "#OraConfEnd" >> /etc/hosts
 }
+
+####################################################################################
+#create keygen
+####################################################################################
+CreateKeygen(){
+	su - grid -c "rm -rf ~/.ssh"
+	su - grid -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t rsa"
+	su - grid -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t dsa"
+	su - oracle -c "rm -rf ~/.ssh"
+	su - oracle -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t rsa"
+	su - oracle -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t dsa"
+	echo -e "\e[1;33mIf this is first node in RAC,you can exec following command as grid and oracle,not ignore following.\e[0m"
+	echo -e "\e[1;33m	cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
+	echo -e "\e[1;33m	cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m"
+	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
+	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m" 
+	echo -e "\e[1;33m	scp ~/.ssh/authorized_keys OtherNode:~/.ssh/authorized_keys\e[0m" 
+	
+}
+
+####################################################################################
+#run function
+####################################################################################
+RunFunction(){
+	InstallRPM   
+	CreateUsersAndDirs   
+	TimeDepSet
+	Stopavahi
+	StopFirewallAndDisableSelinux   
+	EditParaFiles   
+	ObtainBasedir   
+	EditUserBashprofile      
+	EditHostsFile
+	CreateKeygen
+}
+
+
+####################################################################################
+#entrance of the script
+####################################################################################
+RunFunction
