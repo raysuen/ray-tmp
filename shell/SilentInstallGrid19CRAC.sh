@@ -15,7 +15,7 @@
 . ~/.bash_profile
 
 ####################################################################################
-#install rpm that oracle is necessary for installing
+#unzip Grid
 ####################################################################################
 UnzipPRMAndCheck(){
 	echo "${ORACLE_HOME}" | awk -F"/" '{if($NF=="") {print "rm -rf "$0"*"} else {print "rm -rf "$0"/*"}}' | bash
@@ -422,7 +422,7 @@ InstallGrid(){
 #entrance of script
 ####################################################################################
 CreateGirdRspFile
-#UnzipPRMAndCheck
+UnzipPRMAndCheck
 InstallGrid
 
 
