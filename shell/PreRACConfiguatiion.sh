@@ -12,6 +12,7 @@
 #执行脚本后：
 #	1. 手动绑定磁盘,或安装asmlib并创建disk
 #	2. 在hosts文件内把VIP和scan的IP修改正确，并其他节点信息添加进去
+#	3. 通过提示把ssh互信完成。
 #################################################################################
 
 
@@ -37,12 +38,12 @@ InstallRPM(){
 		rpm --import ${mountPatch}/RPM-GPG-KEY-redhat-release
 
 	fi
-	yum -y install bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel
+	yum -y install unzip bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel
 	ls -l compat* elfutils* | awk -v rpmpackage="" '{rpmpackage=$NF" "rpmpackage}END{print "yum -y localinstall "rpmpackage}' | bash 
 	while true
 	do
-		if [ `rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed" | wc -l` -gt 0 ];then
-			rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 compat-libstdc++  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed"
+		if [ `rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1 smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed" | wc -l` -gt 0 ];then
+			rpm -q bc gcc gcc-c++  binutils  make gdb cmake  glibc ksh elfutils-libelf elfutils-libelf-devel fontconfig-devel glibc-devel libaio libaio-devel libXrender libXrender-devel libX11 libXau sysstat libXi libXtst libgcc librdmacm-devel libstdc++ libstdc++-devel libxcb net-tools nfs-utils compat-libcap1  smartmontools  targetcli python python-configshell python-rtslib python-six  unixODBC unixODBC-devel --qf '%{name}.%{arch}\n'| grep "not installed"
 			read -p "`echo -e "Please confirm that all rpm package have installed.[${c_yellow}yes/no${c_end}] default yes:"`" ans
 			if [ "${ans:-yes}" == "yes" ];then
 				break
@@ -400,12 +401,14 @@ CreateKeygen(){
 	su - grid -c "rm -rf ~/.ssh"
 	su - grid -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t rsa"
 	su - grid -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t dsa"
+	su - grid -c "cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys"
+	su - grid -c "cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys"
 	su - oracle -c "rm -rf ~/.ssh"
 	su - oracle -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t rsa"
 	su - oracle -c "echo -e \"\\n\\n\\n\\n\" | ssh-keygen -t dsa"
+	su - oracle -c "cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys"
+	su - oracle -c "cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys"
 	echo -e "\e[1;33mIf this is first node in RAC,you can exec following command as grid and oracle,not ignore following.\e[0m"
-	echo -e "\e[1;33m	cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
-	echo -e "\e[1;33m	cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m"
 	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys\e[0m"
 	echo -e "\e[1;33m	ssh OtherNode cat ~/.ssh/id_dsa.pub >>~/.ssh/authorized_keys\e[0m" 
 	echo -e "\e[1;33m	scp ~/.ssh/authorized_keys OtherNode:~/.ssh/authorized_keys\e[0m" 
