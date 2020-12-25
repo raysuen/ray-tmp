@@ -396,9 +396,13 @@ InstallGrid(){
 	fi
 	#echo ${GridInstallString}
 	
-	echo "${ORACLE_HOME}/gridSetup.sh -ignorePrereq -waitforcompletion -silent -responseFile ${ORACLE_HOME}/install/response/gridsetup.rsp ${GridInstallString}"
+	####################################################################################
+	#install grid 
+	####################################################################################
+	#echo "${ORACLE_HOME}/gridSetup.sh -ignorePrereq -waitforcompletion -silent -responseFile ${ORACLE_HOME}/install/response/gridsetup.rsp ${GridInstallString}"
+	${ORACLE_HOME}/gridSetup.sh -ignorePrereq -waitforcompletion -silent -responseFile ${ORACLE_HOME}/install/response/gridsetup.rsp ${GridInstallString}
 	
-	echo -e "\e[1;31mAttention: You need not to execute ConfigTools script.\e[0m"
+	echo -e "\e[1;31mAttention: You need not to execute configuration script.\e[0m"
 	while true
 	do
 		read -p "`echo -e "Have you finished executing the script？yes/no: "`" ExecScriptCon
