@@ -28,9 +28,10 @@ atom(){
 }
 
 usage(){
-    echo "Usage: -a "
-    echo " -m "
-    echo " -h README"
+    echo "Usage:"
+    echo "	-a "
+    echo "	-m "
+    echo "	-h README"
     exit
 }
 

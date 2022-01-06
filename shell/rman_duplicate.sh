@@ -1,21 +1,22 @@
 #!/bin/bash
 #by raysuen
 
-prisyspwd=password
-pritnsname=CMS
+syspwd=password
+pritnsname=ORCL
+stytnsname=ORCLSTY
 duplogfile=duplog_`date +%Y%m%d%H%M`.log
 
-rman target sys/${prisyspwd}@${pritnsname} auxiliary / log ${duplogfile} append <<EOF
+rman target sys/${syspwd}@${pritnsname} auxiliary sys/${syspwd}@${stytnsname} log ${duplogfile} append <<EOF
 run {
-allocate channel a1 type disk;
-allocate channel a2 type disk;
-allocate channel a3 type disk;
-allocate channel a4 type disk;
-duplicate target database for standby nofilenamecheck;
-release channel a4;
-release channel a3;
-release channel a2;
-release channel a1;
+allocate channel cl1 type disk;
+allocate channel cl2 type disk;
+ALLOCATE AUXILIARY CHANNEL c1 TYPE DISK;
+ALLOCATE AUXILIARY CHANNEL c2 TYPE DISK;
+duplicate target database for standby nofilenamecheck dorecover from active database;
+release channel c2;
+release channel c1;
+release channel cl2;
+release channel cl1;
 }
 EOF
 
