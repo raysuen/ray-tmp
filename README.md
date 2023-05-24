@@ -1,2 +1,2 @@
-# ray-tmp
-Shell scripts related to Oracle
+# ray-private
+private scrits of shell and python
