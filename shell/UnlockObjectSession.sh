@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v 1.0
+#v 1.5
 
 source ~/.bash_profile
 
@@ -10,28 +10,34 @@ source ~/.bash_profile
 ShowLockObjectInfo(){
 	sqlplus -s /nolog<<-RAY
 		conn / as sysdba
-		Set linesize 350
-		Col inst_id for 99
-		Col locked_mode for a15
-		Col username for a25
-		Col osuser for a20
-		col SCHEMANAME for a25
-		col PROCESS for a8
-		Col MACHINE for a20
-		col TERMINAL for a20
-		Col MODULE for a25
-		Col SERVICE_NAME for a20
-		Col pdb_name for a15
-		select l.inst_id,decode(l.locked_mode, 0, 'None', 
-                             1, 'Null (NULL)', 
-                             2, 'Row-S (SS)', 
-                             3, 'Row-X (SX)', 
-                             4, 'Share (S)', 
-                             5, 'S/Row-X (SSX)', 
-                             6, 'Exclusive (X)', 
-                             l.locked_mode) locked_mode,s.sid,s.serial#,s.username,s.schemaname,s.osuser,s.process,s.machine,s.port,s.terminal,s.module,s.service_name,c.name as "pdb_name"
-		from gV\$LOCKED_OBJECT l,gv\$session s,gv\$containers c 
-    	where l.SESSION_ID=s.sid(+) and c.con_id=l.con_id;
+        Set linesize 300
+        set long 10000
+        Col inst_id for 99
+        Col locked_mode for a12
+        Col sid for 99999
+        Col username for a15
+        Col client_id for a6
+        Col client_user for a10
+        Col SCHEMANAME for a15
+        Col MACHINE for a20
+        Col OraServer_ID for a8
+        Col MODULE for a20
+        Col SERVICE_NAME for a15
+        Col pdb_name for a8
+        Col BLOCKER_PROC for a30
+        Col object_name for a20
+        select l.inst_id,decode(l.locked_mode, 0, 'None', 
+                                     1, 'Null (NULL)', 
+                                     2, 'Row-S (SS)', 
+                                     3, 'Row-X (SX)', 
+                                     4, 'Share (S)', 
+                                     5, 'S/Row-X (SSX)', 
+                                     6, 'Exclusive (X)', 
+                                     l.locked_mode) locked_mode,s.sid,s.serial#,s.username,s.schemaname,do.object_name,s.osuser "client_user",s.process "client_id",wc.osid "OraServer_ID",s.machine,s.port,s.module,s.service_name,c.name as "pdb_name",
+                                     s.LAST_CALL_ET "e_time(s)",
+                                     'Blocking Process: '||decode(wc.BLOCKER_OSID,null,'<none>',wc.BLOCKER_OSID)||' from Instance '||wc.BLOCKER_INSTANCE BLOCKER_PROC
+        from gV\$LOCKED_OBJECT l,gv\$session s,gv\$containers c,v\$wait_chains wc,cdb_objects do
+            where l.SESSION_ID=s.sid(+) and c.con_id=l.con_id AND wc.sid(+)=l.SESSION_ID and s.serial#=wc.SESS_SERIAL#(+) and l.object_id=do.object_id(+);      
 	RAY
 
 }

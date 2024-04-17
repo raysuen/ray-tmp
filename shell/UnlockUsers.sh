@@ -1,9 +1,13 @@
 #!/bin/bash
 #auth by raysuen
-#v1.2
+#v2.1
 
 
 . ~/.bash_profile
+
+
+SCRIPTVERSION='2.1'
+
 
 #container类型解锁用户
 UnlockUserInfo(){
@@ -76,6 +80,7 @@ UnLockUser(){
 	fi
 }
 
+<<EOF
 ShowLockUsers(){
 	sqlplus -s /nolog<<-RAY
 	conn / as sysdba
@@ -87,6 +92,47 @@ ShowLockUsers(){
  		WHERE ACCOUNT_STATUS = 'LOCKED(TIMED)' and p.con_id=cu.con_id;
 RAY
 }
+EOF
+
+ShowLockUsers(){
+	sqlplus -s /nolog<<-RAY
+	conn / as sysdba
+	set serveroutput on
+	set linesize 300
+	col username for a30
+	col pdbname for a20
+	declare
+		iscdb varchar2(5);
+		execsql varchar2(1000);
+		cursor ncursor is SELECT username, to_char(LOCK_DATE,'yyyy-mm-dd hh24:mi:ss') LOCK_DATE FROM DBA_USERS cu WHERE ACCOUNT_STATUS = 'LOCKED(TIMED)';
+		cursor ccursor is SELECT USERNAME, to_char(LOCK_DATE,'yyyy-mm-dd hh24:mi:ss') LOCK_DATE,p.name pdbname FROM CDB_USERS cu,v\$pdbs p WHERE ACCOUNT_STATUS = 'LOCKED(TIMED)' and p.con_id=cu.con_id;
+	begin
+		dbms_output.put_line(' ');
+		select cdb into iscdb from v\$database;
+		if iscdb = 'NO' then
+			dbms_output.put_line(rpad('USERNAME',40)||lpad('LOCK_DATE',20));
+			dbms_output.put_line(lpad('_',60,'_'));
+			for res in ncursor
+			loop			
+				dbms_output.put_line(RPAD(res.username,40)||rpad(res.LOCK_DATE,20));
+			end loop;
+		elsif iscdb = 'YES' then
+			dbms_output.put_line(rpad('USERNAME',40)||lpad('LOCK_DATE',20)||lpad('PDBNAME',15));
+			dbms_output.put_line(lpad('_',80,'_'));
+			for res in ccursor
+			loop			
+				dbms_output.put_line(RPAD(res.username,40)||rpad(res.LOCK_DATE,20)||lpad(res.pdbname,10));
+			end loop;
+		end if;
+	end;
+	/
+RAY
+}
+
+ShowVersion(){
+	echo "version : "${SCRIPTVERSION}
+}
+
 
 help_fun(){
 	echo "UnlockUsers.sh usage:
@@ -165,6 +211,11 @@ main(){
     	    SUL)   #--ShowUserLockInfomation 显示锁定用户是否有密码错误登录
     	    	showUserInfo=1
     	    	shift
+
+    	    ;;
+			V)   #--ShowVersion 显示脚本版本
+    	    	ShowVersion
+    	    	exit 0
 
     	    ;;
     	    *)
