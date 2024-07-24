@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v 1.5
+#v 2.0
 
 source ~/.bash_profile
 
@@ -197,13 +197,18 @@ main(){
 		ShowLockObjectInfo               #执行显示锁定对象函数
 	elif [[ $isKill -eq 1 ]] && [[ -n $sessionid ]] && [[ -n $serialnum ]];then   #判断是否要杀死会话，并是否指定会话ID和serial ID
 # 		echo "session_id:"${sessionid}",serial:"$serialnum
-		if [[ `IsSessionExists ${sessionid} ${serialnum}` -gt 0 ]];then            #判断输入的会话ID和serial id是否存在
+		# if [[ `IsSessionExists ${sessionid} ${serialnum}` -gt 0 ]];then            #判断输入的会话ID和serial id是否存在
+# 			UnlockSession ${sessionid} ${serialnum}
+# 		elif [[ `IsSessionExists ${sessionid} ${serialnum}` -gt 0 ]] && [[ -n ${instid} ]];then #判断输入的会话ID、serial id和实例ID是否存在
+# 			UnlockSession ${sessionid} ${serialnum} ${instid}
+# 		else
+# 			echo "The session not exists."
+# 			exit 89
+# 		fi
+		if [ -z ${instid} ];then
 			UnlockSession ${sessionid} ${serialnum}
-		elif [[ `IsSessionExists ${sessionid} ${serialnum}` -gt 0 ]] && [[ -n ${instid} ]];then #判断输入的会话ID、serial id和实例ID是否存在
-			UnlockSession ${sessionid} ${serialnum} ${instid}
 		else
-			echo "The session not exists."
-			exit 89
+			UnlockSession ${sessionid} ${serialnum} ${instid}
 		fi
 		#UnlockSession ${sessionid} ${serialnum}
 	else
