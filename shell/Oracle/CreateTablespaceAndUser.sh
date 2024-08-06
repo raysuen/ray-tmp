@@ -67,14 +67,14 @@ GetOMF(){
 CreateTablespace(){
 	OMFList=(`GetOMF`)
 	if [ ! -z ${OMFList} ];then 
-		for i in ${OMFList[@]}
-		do
-			if [ "$i" == `echo $2 | tr '[:lower:]' '[:upper:]'` ];then
-				#tb_sql="create tablespace "$1" datafile '"$2"' size 128M autoextend on next 128M maxsize unlimited;"
-				tbname=$1
-				dbfile=$2
-			fi
-		done
+		if [ "$i" == `echo $2 | tr '[:lower:]' '[:upper:]'` ];then
+			#tb_sql="create tablespace "$1" datafile '"$2"' size 128M autoextend on next 128M maxsize unlimited;"
+			tbname=$1
+			dbfile=$2
+		else
+			echo "The OMF path is different from the passed one."
+			exit 50
+		fi
 #		if [ `GetOMF` == `echo $2 | tr '[:lower:]' '[:upper:]'` ];then
 #			#tb_sql="create tablespace "$1" datafile '"$2"' size 128M autoextend on next 128M maxsize unlimited;"
 #			tbname=$1
