@@ -1,5 +1,5 @@
 #!/bin/bash
-#v1.0
+#v1.2
 
 #set -e
 BuildPassword(){
@@ -30,7 +30,7 @@ ModifyPassword(){
 	if [ -f /home/kingbase/.encpwd_${date_tmp} ];then
 		rm -f /home/kingbase/.encpwd && cp /home/kingbase/.encpwd_${date_tmp} /home/kingbase/.encpwd
 	else
-		cp /home/kingbase/.encpwd_${date_tmp} /home/kingbase/.encpwd
+		rm -f /home/kingbase/.encpwd
 	fi
 	if [ ${sso_res} -eq 0 ] && [ ${sso_res} -eq 0 ];then
 		echo -e "sso and sao passwords have been changed to \e[1;31m\""${userpass}"\"\e[0m"
