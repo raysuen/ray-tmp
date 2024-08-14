@@ -118,14 +118,19 @@ Check_DB_Mode(){
 #2. back kingbase.conf first
 # TODO: we just modify the kingbase.conf or kingbase.auto.conf?
 back_kingbase_conf(){
+	kingbase_conf=$data_dir/kingbase.conf
     if [[ ${DBMode} == "single" ]];then
     	kingbase_conf_back="kingbase.conf_back_"$(date "+%Y-%m-%d_%H_%M_%S")
     	cp $data_dir/kingbase.conf $data_dir/$kingbase_conf_back
     	echo "before optimize the database, back kingbase.conf to " $kingbase_conf_back
+    	optimize_conf=$data_dir/optimize.db.conf
     elif [[ ${DBMode} == "cluster" ]];then
     	kingbase_conf_back="es_rep.conf_back_"$(date "+%Y-%m-%d_%H_%M_%S")
     	cp $data_dir/es_rep.conf $data_dir/$kingbase_conf_back
-    	echo "before optimize the database, back es_rep.conf to " $kingbase_conf_back
+    	echo "#`date +"%Y-%m-%d %H-%M"`, optimize_database" >> $data_dir/es_rep.conf
+    	[ -f "${etc_path}/set_db.conf" ]&& rm -f ${etc_path}/set_db.conf
+    	optimize_conf=${etc_path}/set_db.conf
+
     fi
     
 }
@@ -163,13 +168,6 @@ get_system_config(){
 #min_wal_size = 80MB
 #max_wal_size = 1GB
 optimize_db_mem(){
-    kingbase_conf=$data_dir/kingbase.conf
-    if [ "${DBMode}" == "cluster" ];then
-    	[ -f "${etc_path}/set_db.conf" ]&& rm -f ${etc_path}/set_db.conf
-    	optimize_conf=${etc_path}/set_db.conf
-    elif [ "${DBMode}" == "single" ];then
-    	optimize_conf=$data_dir/optimize.db.conf
-    fi
 
     shared_mem=$(echo "$mem_kb/1024/4"|bc)
     echo "shared_mem: " $shared_mem "MB"
@@ -195,13 +193,7 @@ EOF
 
 ##5. optimize database checkpoint
 optimize_checkpoint(){
-    kingbase_conf=$data_dir/kingbase.conf
-    if [ "${DBMode}" == "cluster" ];then
-    	[ -f "${etc_path}/set_db.conf" ]&& rm -f ${etc_path}/set_db.conf
-    	optimize_conf=${etc_path}/set_db.conf
-    elif [ "${DBMode}" == "single" ];then
-    	optimize_conf=$data_dir/optimize.db.conf
-    fi
+
     
     [ -f ${optimize_conf} ] && sed -i '/^#OptimizeCheckpointBegin/,/^#OptimizeCheckpointEnd/d' ${optimize_conf}
     cat >>$optimize_conf <<EOF
@@ -236,13 +228,7 @@ EOF
 
 #6. optimize database parallel
 optimize_parallel(){
-    kingbase_conf=$data_dir/kingbase.conf
-    if [ "${DBMode}" == "cluster" ];then
-    	[ -f "${etc_path}/set_db.conf" ]&& rm -f ${etc_path}/set_db.conf
-    	optimize_conf=${etc_path}/set_db.conf
-    elif [ "${DBMode}" == "single" ];then
-    	optimize_conf=$data_dir/optimize.db.conf
-    fi
+
     
     [ -f ${optimize_conf} ] && sed -i '/^#OptimizeParallelBegin/,/^#OptimizeParallelEnd/d' ${optimize_conf}
     echo "#OptimizeParallelBegin">>$optimize_conf
@@ -266,13 +252,13 @@ restart_db(){
         #kingbase_path=$(ps -ef|grep "bin/kingbase" | egrep -v grep | awk '{print $8}')
         kingbase_path=$(ls -l /proc/$KESPID/exe|awk '{print $NF}')
     	bin_path=${kingbase_path%/*}
-    	if [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "cluster" ]];then
+    	if [[ "${user}" == "kingbase" ]] && [[ ${DBMode} == "cluster" ]];then
     		$bin_path/sys_monitor.sh stop && $bin_path/sys_monitor.sh start
-    	elif [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
+    	elif [[ "${user}" == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
     		$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start
-    	elif [[ `whoami` == "root" ]] && [[ ${DBMode} == "cluster" ]];then
+    	elif [[ "${user}" == "root" ]] && [[ ${DBMode} == "cluster" ]];then
     		su - kingbase -c "$bin_path/sys_monitor.sh stop && $bin_path/sys_monitor.sh start"
-    	elif [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
+    	elif [[ "${user}" == "root" ]] && [[ ${DBMode} == "single" ]];then
     		su - kingbase -c "$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start"
     	fi
     	#su - $user -c "$bin_path/sys_ctl -D $data_dir restart -l restart.log"
@@ -283,13 +269,13 @@ restart_db(){
    	    #kingbase_path=$(ps -ef|grep kingbase|grep data |grep $KESPID|grep D|awk '{print $8}')
         kingbase_path=$(ls -l /proc/$KESPID/exe|awk '{print $NF}')
     	bin_path=${kingbase_path%/*}
-    	if [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "cluster" ]];then
+    	if [[ "${user}" == "kingbase" ]] && [[ ${DBMode} == "cluster" ]];then
     		$bin_path/sys_monitor.sh stop && $bin_path/sys_monitor.sh start
-    	elif [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
+    	elif [[ "${user}" == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
     		$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start
-    	elif [[ `whoami` == "root" ]] && [[ ${DBMode} == "cluster" ]];then
+    	elif [[ "${user}" == "root" ]] && [[ ${DBMode} == "cluster" ]];then
     		su - kingbase -c "$bin_path/sys_monitor.sh stop && $bin_path/sys_monitor.sh start"
-    	elif [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
+    	elif [[ "${user}" == "root" ]] && [[ ${DBMode} == "single" ]];then
     		su - kingbase -c "$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start"
     	fi
     	#su - $user -c "$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start"
@@ -340,8 +326,18 @@ echo "6.optimize database parallel"
 optimize_parallel
 echo ""
 
+
+
+
 #edit kingbase.conf
-[ `egrep "^include_if_exists = 'optimize.db.conf'" ${kingbase_conf} | wc -l` -eq 0 ]&& echo "include_if_exists = 'optimize.db.conf'" >> ${kingbase_conf}
+if [ "${DBMode}" == "single" ];then
+	[ `egrep "^include_if_exists = 'optimize.baseline.conf'" ${kingbase_conf} | wc -l` -eq 0 ]&& echo "include_if_exists = 'optimize.baseline.conf'" >> ${kingbase_conf}
+fi
+if [[ "${user}" == "kingbase" ]] && [[ ${DBMode} == "cluster" ]];then
+	$bin_path/sys_monitor.sh set #使用sys_monitore.sh 脚本进行批量修改。
+elif [[ "${user}" == "root" ]] && [[ ${DBMode} == "cluster" ]];then
+	su - kingbase -c "$bin_path/sys_monitor.sh set"  #使用sys_monitore.sh 脚本进行批量修改。
+fi
 
 echo "end optimize database"
 echo ""
@@ -349,6 +345,7 @@ echo "7.restart database to make those configuration work"
 while true
 do
 	chown -R kingbase:kingbase ${data_dir}
+	[ -d "${etc_path}" ]&& chown -R kingbase:kingbase ${etc_path}  
 	echo "please chose if restart database, 0: no, 1: yes"
 	#7. restart database, make the conf work
 	read restart_option
@@ -363,7 +360,7 @@ do
 # 	    echo "usage:"
 # 	    echo "su - $user -c "$bin_path/sys_ctl -D $data_dir restart -l restart.log""
 	else
-		echo "You must enter 1 or 2."
+		echo "You must enter 1 or 0."
 		continue
 	fi
 done

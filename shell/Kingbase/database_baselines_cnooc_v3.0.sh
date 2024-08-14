@@ -114,6 +114,7 @@ optimize_baselines(){
     	[ -f "${etc_path}/set_db.conf" ]&& rm -f ${etc_path}/set_db.conf
     	baseline_conf=${etc_path}/set_db.conf
     	kingbase_conf=$data_dir/es_rep.conf		#设置kingbase集群的主配置文件
+    	echo "#`date +"%Y-%m-%d %H-%M"`, optimize_database" >> $data_dir/es_rep.conf
     elif [ "${DBMode}" == "single" ];then
     	baseline_conf=$data_dir/optimize.baseline.conf
     	kingbase_conf=$data_dir/kingbase.conf	#设置kingbase主配置文件
@@ -170,7 +171,7 @@ restart_db(){
     	$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start
     elif [[ `whoami` == "root" ]] && [[ ${DBMode} == "cluster" ]];then
     	su - kingbase -c "$bin_path/sys_monitor.sh stop && $bin_path/sys_monitor.sh start"
-    elif [[ `whoami` == "kingbase" ]] && [[ ${DBMode} == "single" ]];then
+    elif [[ `whoami` == "root" ]] && [[ ${DBMode} == "single" ]];then
     	su - kingbase -c "$bin_path/sys_ctl -D ${data_dir} stop && $bin_path/sys_ctl -D ${data_dir} start"
     fi
     
@@ -225,7 +226,7 @@ echo "4.restart database to make those configuration work"
 while true
 do
 	chown -R kingbase:kingbase ${data_dir}
-	chown -R kingbase:kingbase ${etc_path}   
+	[ -d "${etc_path}" ]&& chown -R kingbase:kingbase ${etc_path}  
 	echo "please chose if restart database, 0: no, 1: yes"
 	#7. restart database, make the conf work
 	read restart_option
@@ -251,7 +252,7 @@ do
 # 	    echo "usage:"
 # 	    echo "su - $user -c "$bin_path/sys_ctl -D $data_dir restart -l restart.log""
 	else
-		echo "You must enter 1 or 2."
+		echo "You must enter 1 or 0."
 		continue
 	fi
 done
