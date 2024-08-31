@@ -323,7 +323,7 @@ echo ""
 
 #6. optimize database parallel
 echo "6.optimize database parallel"
-optimize_parallel
+#optimize_parallel
 echo ""
 
 
