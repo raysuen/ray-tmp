@@ -14,6 +14,8 @@
 ### version: v3.0
 ###			reedit info: Separate configuration file,Distinguish cluster and single
 ###			reedit info: using sys_monitor.sh to set up parameters in cluster.
+### version: v4.0
+###			reedit info: repair bug for check DB mode
 ####################################################################################################################
 
 echo "This tool help use to make a base optimization for database" 
@@ -87,10 +89,10 @@ Check_DB_Mode(){
 	kingbase_path=$(ps -ef|grep "bin/kingbase" | egrep -v grep | awk '{print $8}')
     bin_path=${kingbase_path%/*}
     if [ `whoami` == "kingbase" ];then
-    	if [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ `$bin_path/repmgr cluster show 2>/dev/null | egrep primary | wc -l` -eq 1 ]]  && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -eq 1 ]];then
+    	if [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ `$bin_path/repmgr cluster show 2>/dev/null | egrep primary | wc -l` -eq 1 ]]  && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -ge 1 ]];then
     		DBMode="cluster"
 			etc_path=${bin_path%/*}"/etc"
-    	elif [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ `$bin_path/repmgr cluster show 2>/dev/null | egrep standby | wc -l` -eq 1 ]] && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -eq 0 ]];then
+    	elif [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ `$bin_path/repmgr cluster show 2>/dev/null | egrep standby | wc -l` -ge 1 ]] && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -eq 0 ]];then
     		echo "This is the standby node of the cluster！！"
     		exit 0
     	else
@@ -101,7 +103,7 @@ Check_DB_Mode(){
     elif [ `whoami` == "root" ];then
     	primary_exist=`su - kingbase -c "$bin_path/repmgr cluster show 2>/dev/null | egrep primary | wc -l"`
 
-    	if [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ ${primary_exist} -eq 1 ]] && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -eq 1 ]];then
+    	if [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ ${primary_exist} -eq 1 ]] && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -ge 1 ]];then
     		DBMode="cluster"
 			etc_path=${bin_path%/*}"/etc"
     	elif [[ `ps -ef | egrep repmgrd | egrep -v grep | wc -l` -eq 1 ]] && [[ ${primary_exist} -eq 1 ]] && [[ `ps -ef | grep walsender |egrep -v grep | wc -l` -eq 0 ]];then
