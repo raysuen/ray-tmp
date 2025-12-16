@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v 3.6
+#v 3.5
 
 db_pwd=""
 back_dir=/kingbase/dump/back/`date +%Y%m%d`
@@ -192,7 +192,6 @@ db_list(){
 }
 
 # 备份数据库（支持指定schema，包含数据）
-# 备份数据库（支持指定schema，包含数据）
 dump_db(){
     [ ! -d ${back_dir} ]&& mkdir -p ${back_dir}
     # 确定使用的端口和二进制路径
@@ -202,19 +201,8 @@ dump_db(){
     for db in $DATABASES
     do
         echo "开始备份数据库: $db ${specified_schema:+（schema: $specified_schema）}"
-        
-        # 获取数据库的server_encoding
-        echo "查询数据库 $db 的字符集编码..."
-        encoding=$($use_bin/ksql -Usystem -h ${hostinf} -p $use_port -d $db -c "show server_encoding;" -t 2>/dev/null | tr -d '[:space:]')
-        if [[ -z "$encoding" ]]; then
-            echo "警告：无法获取数据库 $db 的编码，使用默认编码 UTF8"
-            encoding="UTF8"
-        else
-            echo "数据库 $db 的字符集编码为: $encoding"
-        fi
-
-        # 基础备份命令（添加-E指定字符集）
-        dump_cmd="$use_bin/sys_dump -Usystem -h ${hostinf} -p $use_port -Fc -d $db -E $encoding"
+        # 基础备份命令
+        dump_cmd="$use_bin/sys_dump -Usystem -h ${hostinf} -p $use_port -Fc -d $db"
         # 若指定了schema，添加-n参数（仅备份该schema，包含结构和数据）
         if [[ -n "$specified_schema" ]]; then
             dump_cmd="$dump_cmd -n $specified_schema"
