@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v 3.0
+#v 2.5
 
 
 back_dir=/kingbase/dump/back/`date +%Y%m%d`
@@ -8,7 +8,6 @@ rm_dir=/kingbase/dump/back/`date +%Y%m%d -d "-30 day"`
 hostinf="127.0.0.1"
 specified_dbs=""  # 用户指定的数据库列表（逗号分隔）
 specified_schema=""  # 用户指定的schema
-compress=0  # 是否压缩备份文件，0不压缩，1压缩（默认不压缩）
 
 set -e
 
@@ -20,24 +19,21 @@ show_help() {
 选项:
   -d 数据库列表   指定要备份的数据库（逗号分隔，如：-d db1,db2，与-s配合使用）
   -s schema名     指定要备份的schema（需配合-d指定数据库，备份该schema的结构和数据）
-  -z              启用备份文件压缩（默认不压缩，使用gzip压缩）
   -h              显示此帮助信息并退出
 
 说明:
   1. 未指定任何选项时，默认备份除系统库外的所有数据库（全量备份）
   2. 指定-s时必须同时指定-d，仅备份指定数据库下的指定schema（包含结构和数据）
   3. 自动删除30天前的备份文件，备份目录：/kingbase/dump/back/[日期]
-  4. 使用-z选项可对备份文件进行gzip压缩，压缩后文件扩展名为.dump.gz
 EOF
 }
 
 # 解析命令行参数
 parse_args() {
-    while getopts "d:s:hz" opt; do
+    while getopts "d:s:h" opt; do
         case $opt in
             d) specified_dbs="$OPTARG" ;;
             s) specified_schema="$OPTARG" ;;
-            z) compress=1 ;;
             h) show_help; exit 0 ;;
             *) echo "错误：无效选项 '$opt'，使用 -h 查看帮助" >&2; exit 1 ;;
         esac
@@ -45,8 +41,8 @@ parse_args() {
 
     # 检查-s参数是否单独使用
     if [[ -n "$specified_schema" && -z "$specified_dbs" ]]; then
-        echo "错误：使用-s指定schema时，必须通过-d指定数据库（如：-d db1 -s schema1）" >&2;
-        exit 1;
+        echo "错误：使用-s指定schema时，必须通过-d指定数据库（如：-d db1 -s schema1）" >&2
+        exit 1
     fi
 }
 
@@ -173,14 +169,6 @@ dump_db(){
         set +e
         if $dump_cmd; then
             echo "备份成功: $output_file"
-            # 若需要压缩，执行gzip压缩
-            if [[ $compress -eq 1 ]]; then
-                if gzip "$output_file"; then
-                    echo "压缩成功: ${output_file}.gz"
-                else
-                    echo "压缩失败: $output_file" >&2
-                fi
-            fi
         else
             echo "备份失败: $db ${specified_schema:+（schema: $specified_schema）}" >&2
         fi
