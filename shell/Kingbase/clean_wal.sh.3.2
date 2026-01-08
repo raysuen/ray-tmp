@@ -1,21 +1,6 @@
 #!/bin/bash
 #raysuen
-#v3.5 (新增-n参数免交互执行，保留交互式确认逻辑)
-
-# 金仓数据库配置（请根据实际环境填写）
-kingbase_bin=/path/to/kingbase/bin  # 金仓bin目录，最后不要加斜线
-kingbase_data=/path/to/kingbase/data  # 金仓数据目录，最后不要加斜线
-db_user="system"  # 数据库管理员用户
-db_name="kingbase"  # 数据库名称
-KINGBASE_PASSWORD=''   #db_user用户密码
-
-#判断密码是否为空，非空则导出
-if [ -n "$KINGBASE_PASSWORD" ]; then
-    export KINGBASE_PASSWORD
-    echo "✅ 数据库密码已导出为环境变量 KINGBASE_PASSWORD"
-else
-    echo "ℹ️  数据库密码为空，未导出环境变量 KINGBASE_PASSWORD"
-fi
+#v3.2 (新增主从复制支持，优化WAL基准选择，处理空格问题)
 
 LANG=C
 # 计算符（默认减法，保留最近的WAL文件）
@@ -23,27 +8,16 @@ OP=-
 # 保留的WAL文件数量（默认保留2个）
 NUM=2
 
-# 初始化强制执行标志（默认不强制，需交互）
-force_exec=0
-
-# 解析命令行参数（仅支持-n参数）
-while getopts "n" opt; do
-  case $opt in
-    n)
-      force_exec=1  # 标记为强制执行，跳过交互
-      ;;
-    \?)
-      echo "错误：无效的选项 -$OPTARG" >&2
-      echo "用法：$0 [-n] （-n：免交互直接执行清理）" >&2
-      exit 1
-      ;;
-  esac
-done
+# 金仓数据库配置（请根据实际环境填写）
+kingbase_bin=/path/to/kingbase/bin  # 金仓bin目录，最后不要加斜线
+kingbase_data=/path/to/kingbase/data  # 金仓数据目录，最后不要加斜线
+db_user="system"  # 数据库管理员用户
+db_name="kingbase"  # 数据库名称
 
 cal_wal(){
     # 十六进制字符串后8位计算器
     # 功能：截取输入十六进制字符串的最后8位进行算术运算，再与前部分拼接
-    # 使用方法：cal_wal <十六进制字符串> <操作符(+, -, *, /)> <数值>
+    # 使用方法：cal_wal <十六进制字符串> <操作符> <数值>
     
     if [ $# -ne 3 ]; then
         echo "错误：参数数量不正确" >&2
@@ -175,31 +149,9 @@ else
     base_wal="$wal_file_num"
 fi
 
-# 计算保留位置
+# 计算保留位置并删除旧WAL
 final_result=$(cal_wal "$base_wal" "$OP" "$NUM")
 echo "#delete wal files: $final_result"
-
-# ===================== 核心逻辑：参数判断 + 交互/免交互执行 =====================
-if [ $force_exec -eq 1 ]; then
-    # 传入-n参数，免交互直接执行
-    echo -e "\n✅ 检测到-n参数，免交互执行WAL清理，阈值：$final_result"
-    ${kingbase_bin}/sys_archivecleanup ${kingbase_data}/sys_wal "$final_result"
-    echo "✅ WAL文件清理完成！"
-else
-    # 未传-n，走交互式确认
-    echo -e "\n⚠️  即将执行WAL文件清理，清理阈值：$final_result"
-    echo -n "是否确认执行？(y=执行/n=取消)："
-    read -r confirm_input  # 读取用户输入
-
-    # 判断输入：仅y/Y执行，其他均取消
-    if [[ "$confirm_input" =~ ^[Yy]$ ]]; then
-        echo "✅ 用户确认执行，开始清理WAL文件..."
-        ${kingbase_bin}/sys_archivecleanup ${kingbase_data}/sys_wal "$final_result"
-        echo "✅ WAL文件清理完成！"
-    else
-        echo "❌ 用户取消执行（输入：$confirm_input），退出脚本！"
-        exit 0  # 取消执行，正常退出
-    fi
-fi
+${kingbase_bin}/sys_archivecleanup ${kingbase_data}/sys_wal "$final_result"
 
 exit 0
