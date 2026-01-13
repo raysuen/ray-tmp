@@ -1,23 +1,20 @@
 #!/bin/bash
 #by raysuen
-#v3.5
+#v3.0
 
 # 帮助函数
 show_help() {
-    echo "用法: $0 [-g ['length' ['upper' 'lower' 'digits' 'special']]] [-m ['length' ['upper' 'lower' 'digits' 'special']]] [-h]"
+    echo "用法: $0 [-g 'length upper lower digits special'] [-m 'length upper lower digits special'] [-h]"
     echo "选项:"
-    echo "  -g ['length' ['upper' 'lower' 'digits' 'special']]: 生成密码。可指定密码长度、大写字母最小数量、小写字母最小数量、数字最小数量和特殊字符最小数量，用空格分隔。若不指定，使用默认值。"
-    echo "  -g: 不指定任何参数，使用默认的12位密码长度及默认字符数量。"
-    echo "  -m ['length' ['upper' 'lower' 'digits' 'special']]: 修改密码。可指定密码长度、大写字母最小数量、小写字母最小数量、数字最小数量和特殊字符最小数量，用空格分隔。若不指定，使用默认值。"
-    echo "  -m: 不指定任何参数，使用默认的12位密码长度及默认字符数量。"
-    echo "  无参数: 生成默认 12 位长度的密码。"
+    echo "  -g 'length upper lower digits special': 生成密码。可指定密码长度、大写字母最小数量、小写字母最小数量、数字最小数量和特殊字符最小数量，用空格分隔。若不指定，使用默认值。"
+    echo "  -m 'length upper lower digits special': 修改密码。可指定密码长度、大写字母最小数量、小写字母最小数量、数字最小数量和特殊字符最小数量，用空格分隔。若不指定，使用默认值。"
     echo "  -h: 显示此帮助信息。"
 }
 
 # 生成密码函数
 generate_password() {
     # 参数解析
-    local length=${1:-12}
+    local length=$1
     local min_upper=${2:-1}   # 默认至少1个大写
     local min_lower=${3:-1}   # 默认至少1个小写
     local min_digits=${4:-1}  # 默认至少1个数字
@@ -115,78 +112,42 @@ ModifyPassword() {
 }
 
 # 解析命令行参数
-if [ $# -eq 0 ]; then
-    generate_password 12
-else
-    while getopts ":g:m:h" opt; do
-        case $opt in
-            g)
-                if [ -z "$OPTARG" ]; then
-                    generate_password 12
-                else
-                    args=($OPTARG)
-                    if [ ${#args[@]} -eq 1 ]; then
-                        length=${args[0]}
-                        generate_password $length
-                    elif [ ${#args[@]} -eq 5 ]; then
-                        length=${args[0]}
-                        min_upper=${args[1]}
-                        min_lower=${args[2]}
-                        min_digits=${args[3]}
-                        min_special=${args[4]}
-                        generate_password $length $min_upper $min_lower $min_digits $min_special
-                    else
-                        echo "无效的 -g 参数格式。" >&2
-                        show_help
-                        exit 1
-                    fi
-                fi
-                ;;
-            m)
-                if [ -z "$OPTARG" ]; then
-                    ModifyPassword 12
-                else
-                    args=($OPTARG)
-                    if [ ${#args[@]} -eq 1 ]; then
-                        length=${args[0]}
-                        ModifyPassword $length
-                    elif [ ${#args[@]} -eq 5 ]; then
-                        length=${args[0]}
-                        min_upper=${args[1]}
-                        min_lower=${args[2]}
-                        min_digits=${args[3]}
-                        min_special=${args[4]}
-                        ModifyPassword $length $min_upper $min_lower $min_digits $min_special
-                    else
-                        echo "无效的 -m 参数格式。" >&2
-                        show_help
-                        exit 1
-                    fi
-                fi
-                ;;
-            h)
-                show_help
-                exit 0
-                ;;
-            \?)
-                echo "无效的选项: -$OPTARG" >&2
-                show_help
-                exit 1
-                ;;
-            :)
-                if [ "$OPTARG" = "g" ]; then
-                    generate_password 12
-                elif [ "$OPTARG" = "m" ]; then
-                    ModifyPassword 12
-                else
-                    echo "选项 -$OPTARG 需要参数。" >&2
-                    show_help
-                    exit 1
-                fi
-                ;;
-        esac
-    done
-fi
+while getopts ":g:m:h" opt; do
+    case $opt in
+        g)
+            args=($OPTARG)
+            length=${args[0]:-12}
+            min_upper=${args[1]:-1}
+            min_lower=${args[2]:-1}
+            min_digits=${args[3]:-1}
+            min_special=${args[4]:-1}
+            generate_password $length $min_upper $min_lower $min_digits $min_special
+            ;;
+        m)
+            args=($OPTARG)
+            length=${args[0]:-12}
+            min_upper=${args[1]:-1}
+            min_lower=${args[2]:-1}
+            min_digits=${args[3]:-2}
+            min_special=${args[4]:-2}
+            ModifyPassword $length $min_upper $min_lower $min_digits $min_special
+            ;;
+        h)
+            show_help
+            exit 0
+            ;;
+        \?)
+            echo "无效的选项: -$OPTARG" >&2
+            show_help
+            exit 1
+            ;;
+        :)
+            echo "选项 -$OPTARG 需要参数。" >&2
+            show_help
+            exit 1
+            ;;
+    esac
+done
 
 if [ $OPTIND -eq 1 ]; then
     echo "未提供选项。"

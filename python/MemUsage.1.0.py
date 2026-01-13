@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# @Time : 2025年10月15日 10:33:22
+# @Time : 2025年7月3日 09:22:57
 # @Author : raysuen
-# @version 1.5
-
+# @version 1.0
 
 import os
 import pwd
@@ -12,7 +11,7 @@ import argparse
 from collections import defaultdict
 
 def get_process_memory_info():
-    """获取所有进程的内存使用信息（包含PSS）"""
+    """获取所有进程的内存使用信息"""
     processes = {}
     
     # 遍历/proc目录下的所有进程ID
@@ -22,22 +21,12 @@ def get_process_memory_info():
             with open(f'/proc/{pid}/status', 'r') as status_file:
                 status = status_file.read()
             
-            # 解析内存信息
+            # 解析内存信息 (VmRSS: 实际使用的物理内存)
             vm_rss_match = re.search(r'VmRSS:\s+(\d+)\s+kB', status)
             vm_size_match = re.search(r'VmSize:\s+(\d+)\s+kB', status)
             
             # 解析用户ID
             uid_match = re.search(r'Uid:\s+(\d+)', status)
-            
-            # 解析PSS值（从smaps获取）
-            pss_total = 0
-            try:
-                with open(f'/proc/{pid}/smaps', 'r') as smaps_file:
-                    for line in smaps_file:
-                        if line.startswith('Pss:'):
-                            pss_total += int(line.split()[1])
-            except (IOError, PermissionError):
-                pss_total = 0  # 无法访问时设为0
             
             if vm_rss_match and uid_match:
                 # 获取进程命令行
@@ -70,7 +59,6 @@ def get_process_memory_info():
                 processes[pid] = {
                     'pid': pid,
                     'rss_kb': int(vm_rss_match.group(1)),
-                    'pss_kb': pss_total,  # 添加PSS值
                     'vms_kb': int(vm_size_match.group(1)) if vm_size_match else 0,
                     'username': username,
                     'command': cmdline,
@@ -95,21 +83,19 @@ def format_memory(kb):
     return f"{size:.1f} TB"
 
 def print_process_table(processes, sort_by='rss', reverse=True, group=False):
-    """打印进程信息表格（包含PSS列）"""
-    # 表头添加PSS列
-    header = f"{'PID':>8} {'USER':<12} {'MEM':>8} {'PSS':>8} {'VIRT':>8} {'STATE':<5} COMMAND"
+    """打印进程信息表格"""
+    # 表头
+    header = f"{'PID':>8} {'USER':<12} {'MEM':>8} {'VIRT':>8} {'STATE':<5} COMMAND"
     print(header)
-    # 调整分隔线长度
-    print('=' * (8 + 1 + 12 + 1 + 8 + 1 + 8 + 1 + 8 + 1 + 5 + 1 + 50))
+    print('=' * (8 + 1 + 12 + 1 + 8 + 1 + 8 + 1 + 5 + 1 + 50))
     
     # 分组统计
     if group:
-        grouped = defaultdict(lambda: {'count': 0, 'rss': 0, 'pss': 0, 'vms': 0})  # 添加pss统计
+        grouped = defaultdict(lambda: {'count': 0, 'rss': 0, 'vms': 0})
         for proc in processes.values():
             key = (proc['username'], proc['command'])
             grouped[key]['count'] += 1
             grouped[key]['rss'] += proc['rss_kb']
-            grouped[key]['pss'] += proc['pss_kb']  # 累加PSS
             grouped[key]['vms'] += proc['vms_kb']
         
         # 创建分组列表
@@ -120,35 +106,29 @@ def print_process_table(processes, sort_by='rss', reverse=True, group=False):
                 'command': cmd,
                 'count': data['count'],
                 'rss': data['rss'],
-                'pss': data['pss'],  # 包含PSS
                 'vms': data['vms']
             })
         
-        # 排序分组（支持按PSS排序）
+        # 排序分组
         if sort_by == 'rss':
             group_list.sort(key=lambda x: x['rss'], reverse=reverse)
-        elif sort_by == 'pss':  # 添加PSS排序
-            group_list.sort(key=lambda x: x['pss'], reverse=reverse)
         elif sort_by == 'vms':
             group_list.sort(key=lambda x: x['vms'], reverse=reverse)
         elif sort_by == 'count':
             group_list.sort(key=lambda x: x['count'], reverse=reverse)
         
-        # 打印分组信息（包含PSS）
+        # 打印分组信息
         for group in group_list:
             print(f"{group['count']:>8} {group['user']:<12} "
                   f"{format_memory(group['rss']):>8} "
-                  f"{format_memory(group['pss']):>8} "  # 显示PSS
                   f"{format_memory(group['vms']):>8} "
                   f"{'':<5} {group['command']}")
         
         return
     
-    # 排序进程（支持按PSS排序）
+    # 排序进程
     if sort_by == 'rss':
         sorted_procs = sorted(processes.values(), key=lambda p: p['rss_kb'], reverse=reverse)
-    elif sort_by == 'pss':  # 添加PSS排序
-        sorted_procs = sorted(processes.values(), key=lambda p: p['pss_kb'], reverse=reverse)
     elif sort_by == 'vms':
         sorted_procs = sorted(processes.values(), key=lambda p: p['vms_kb'], reverse=reverse)
     elif sort_by == 'pid':
@@ -158,21 +138,20 @@ def print_process_table(processes, sort_by='rss', reverse=True, group=False):
     else:
         sorted_procs = list(processes.values())
     
-    # 打印进程信息（包含PSS）
+    # 打印进程信息
     for proc in sorted_procs:
         print(f"{proc['pid']:>8} {proc['username']:<12} "
               f"{format_memory(proc['rss_kb']):>8} "
-              f"{format_memory(proc['pss_kb']):>8} "  # 显示PSS
               f"{format_memory(proc['vms_kb']):>8} "
               f"{proc['state']:<5} {proc['command']}")
 
 def main():
-    # 设置命令行参数（添加PSS排序选项）
+    # 设置命令行参数
     parser = argparse.ArgumentParser(
         description='Linux进程内存监控工具',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument('-s', '--sort', choices=['rss', 'pss', 'vms', 'pid', 'time'],  # 添加pss选项
+    parser.add_argument('-s', '--sort', choices=['rss', 'vms', 'pid', 'time'], 
                         default='rss', help='排序字段')
     parser.add_argument('-r', '--reverse', action='store_true', 
                         help='反向排序（默认按内存降序）')
@@ -207,7 +186,7 @@ def main():
     print_process_table(
         processes, 
         sort_by=args.sort, 
-        reverse=args.reverse if args.reverse else (args.sort in ['rss', 'pss', 'vms']),  # 包含pss默认排序
+        reverse=args.reverse if args.reverse else (args.sort in ['rss', 'vms']),
         group=args.group
     )
 
@@ -223,30 +202,4 @@ if __name__ == "__main__":
 #     python3 process_memory.py -s vms
 # #分组统计
 #     python3 process_memory.py -g
-# #按用户过滤并显示分组统计
-#    python3 process_monitor.py -u www-data --group
-# #显示前10个内存消耗最大的进程
-#     python3 process_monitor.py --top 10
-# #只显示运行中的进程
-#     python3 process_monitor.py --status Running
-# #按虚拟内存排序并显示僵尸进程
-#    python3 process_monitor.py -s vms --status Zombie
-# #查找特定进程
-#    python3 process_monitor.py --pid 1234
-# 进程状态说明:
-#   Running     : 正在运行或可运行
-#   Sleeping    : 可中断睡眠（等待事件）
-#   Disk Sleep  : 不可中断睡眠（通常等待I/O）
-#   Stopped     : 被作业控制信号停止
-#   Zombie      : 僵尸进程（已终止但父进程未回收）
-#   Idle        : 空闲进程
-#   Tracing Stop: 被调试器跟踪
-#   Dead        : 进程已死亡
-# RSS 会重复计算共享内存（导致总内存统计虚高），而 PSS 按比例分配共享内存，更接近 “进程实际消耗的内存”。例：两个进程共享 100MB 内存，每个进程的 RSS 都会加 100MB（总统计 200MB），但 PSS 每个进程只加 50MB（总统计 100MB，与实际物理内存消耗一致）。
-# MEM 列：对应代码中的rss_kb，即RSS（Resident Set Size，驻留集大小）。它表示进程当前实际使用的物理内存总量（不包括交换到磁盘的内存），包含：
-#     进程私有内存（仅该进程使用的内存）；
-#     共享内存（如动态链接库、共享文件等）的完整大小（即使该内存被多个进程共享，每个进程的 RSS 都会统计其全部大小）。
-# PSS 列：对应pss_kb，即Proportional Set Size（比例集大小）。它是对 RSS 的优化，解决了共享内存重复计算的问题：
-#     进程私有内存部分与 RSS 一致；
-#     共享内存部分会按使用进程的数量平均分配（例如：100MB 共享内存被 2 个进程使用，每个进程的 PSS 会统计 50MB）。
 # """
