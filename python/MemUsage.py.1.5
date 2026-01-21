@@ -2,53 +2,14 @@
 # -*- coding: utf-8 -*-
 # @Time : 2025年10月15日 10:33:22
 # @Author : raysuen
-# @version 1.7  # 版本升级：新增Buff/Cache统计
+# @version 1.5
+
 
 import os
 import pwd
 import re
 import argparse
 from collections import defaultdict
-
-def get_system_memory_info():
-    """获取系统级内存信息（包含Buff/Cache大小及使用率）"""
-    meminfo = {}
-    try:
-        with open('/proc/meminfo', 'r') as f:
-            for line in f:
-                parts = line.strip().split()
-                if len(parts) >= 2:
-                    key = parts[0].rstrip(':')
-                    value = int(parts[1])  # 单位：KB
-                    meminfo[key] = value
-    except IOError:
-        return None
-
-    # 核心计算：Buff/Cache 总大小（包含Buffers、Cached、可回收Slab）
-    buffers = meminfo.get('Buffers', 0)
-    cached = meminfo.get('Cached', 0)
-    sreclaimable = meminfo.get('SReclaimable', 0)  # Slab可回收部分属于Cache
-    buff_cache_total = buffers + cached + sreclaimable
-
-    # 系统总内存/可用内存
-    total_mem = meminfo.get('MemTotal', 0)
-    free_mem = meminfo.get('MemFree', 0)
-    available_mem = meminfo.get('MemAvailable', 0)
-
-    # 计算Buff/Cache使用率：Buff/Cache占已使用内存的比例
-    used_mem = total_mem - free_mem  # 已使用内存（含Buff/Cache）
-    buff_cache_usage = (buff_cache_total / used_mem) * 100 if used_mem > 0 else 0.0
-
-    return {
-        'total_kb': total_mem,
-        'free_kb': free_mem,
-        'available_kb': available_mem,
-        'buffers_kb': buffers,
-        'cached_kb': cached,
-        'sreclaimable_kb': sreclaimable,
-        'buff_cache_kb': buff_cache_total,
-        'buff_cache_usage': round(buff_cache_usage, 1)  # 保留1位小数
-    }
 
 def get_process_memory_info():
     """获取所有进程的内存使用信息（包含PSS）"""
@@ -133,25 +94,6 @@ def format_memory(kb):
         size /= 1024
     return f"{size:.1f} TB"
 
-def print_system_memory_info(sys_mem):
-    """打印系统内存概览（含Buff/Cache使用率）"""
-    if not sys_mem:
-        print("⚠️  无法读取系统内存信息")
-        return
-    
-    print("=" * 80)
-    print("系统内存概览")
-    print("-" * 80)
-    print(f"总内存:       {format_memory(sys_mem['total_kb']):>10}")
-    print(f"空闲内存:     {format_memory(sys_mem['free_kb']):>10}")
-    print(f"可用内存:     {format_memory(sys_mem['available_kb']):>10}")
-    print(f"Buffers:      {format_memory(sys_mem['buffers_kb']):>10}")
-    print(f"Cached:       {format_memory(sys_mem['cached_kb']):>10}")
-    print(f"可回收Slab:   {format_memory(sys_mem['sreclaimable_kb']):>10}")
-    print(f"Buff/Cache总计: {format_memory(sys_mem['buff_cache_kb']):>10}  (使用率: {sys_mem['buff_cache_usage']}%)")
-    print("=" * 80)
-    print()
-
 def print_process_table(processes, sort_by='rss', reverse=True, group=False):
     """打印进程信息表格（包含PSS列）"""
     # 表头添加PSS列
@@ -227,7 +169,7 @@ def print_process_table(processes, sort_by='rss', reverse=True, group=False):
 def main():
     # 设置命令行参数（添加PSS排序选项）
     parser = argparse.ArgumentParser(
-        description='Linux进程内存监控工具（新增Buff/Cache统计）',
+        description='Linux进程内存监控工具',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument('-s', '--sort', choices=['rss', 'pss', 'vms', 'pid', 'time'],  # 添加pss选项
@@ -245,14 +187,10 @@ def main():
     
     args = parser.parse_args()
     
-    # 1. 获取并打印系统内存信息（含Buff/Cache）
-    sys_mem = get_system_memory_info()
-    print_system_memory_info(sys_mem)
-    
-    # 2. 获取进程信息
+    # 获取进程信息
     processes = get_process_memory_info()
     
-    # 3. 应用过滤器
+    # 应用过滤器
     if args.user:
         processes = {pid: proc for pid, proc in processes.items() 
                      if proc['username'] == args.user}
@@ -265,7 +203,7 @@ def main():
         processes = {pid: proc for pid, proc in processes.items() 
                      if args.command.lower() in proc['command'].lower()}
     
-    # 4. 打印进程表
+    # 打印进程表
     print_process_table(
         processes, 
         sort_by=args.sort, 
@@ -275,3 +213,40 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+# """
+# #用户名过滤
+#     python3 process_memory.py -u root
+# #按命令过滤
+#     python3 process_memory.py -c firefox
+# #按虚拟内存排序
+#     python3 process_memory.py -s vms
+# #分组统计
+#     python3 process_memory.py -g
+# #按用户过滤并显示分组统计
+#    python3 process_monitor.py -u www-data --group
+# #显示前10个内存消耗最大的进程
+#     python3 process_monitor.py --top 10
+# #只显示运行中的进程
+#     python3 process_monitor.py --status Running
+# #按虚拟内存排序并显示僵尸进程
+#    python3 process_monitor.py -s vms --status Zombie
+# #查找特定进程
+#    python3 process_monitor.py --pid 1234
+# 进程状态说明:
+#   Running     : 正在运行或可运行
+#   Sleeping    : 可中断睡眠（等待事件）
+#   Disk Sleep  : 不可中断睡眠（通常等待I/O）
+#   Stopped     : 被作业控制信号停止
+#   Zombie      : 僵尸进程（已终止但父进程未回收）
+#   Idle        : 空闲进程
+#   Tracing Stop: 被调试器跟踪
+#   Dead        : 进程已死亡
+# RSS 会重复计算共享内存（导致总内存统计虚高），而 PSS 按比例分配共享内存，更接近 “进程实际消耗的内存”。例：两个进程共享 100MB 内存，每个进程的 RSS 都会加 100MB（总统计 200MB），但 PSS 每个进程只加 50MB（总统计 100MB，与实际物理内存消耗一致）。
+# MEM 列：对应代码中的rss_kb，即RSS（Resident Set Size，驻留集大小）。它表示进程当前实际使用的物理内存总量（不包括交换到磁盘的内存），包含：
+#     进程私有内存（仅该进程使用的内存）；
+#     共享内存（如动态链接库、共享文件等）的完整大小（即使该内存被多个进程共享，每个进程的 RSS 都会统计其全部大小）。
+# PSS 列：对应pss_kb，即Proportional Set Size（比例集大小）。它是对 RSS 的优化，解决了共享内存重复计算的问题：
+#     进程私有内存部分与 RSS 一致；
+#     共享内存部分会按使用进程的数量平均分配（例如：100MB 共享内存被 2 个进程使用，每个进程的 PSS 会统计 50MB）。
+# """

@@ -1,13 +1,28 @@
 #!/bin/bash
 #by raysuen
+<<<<<<< HEAD
 #v 2.5
 
+=======
+#v 3.8
+>>>>>>> a80151d (20260121)
 
 back_dir=/kingbase/dump/back/`date +%Y%m%d`
 rm_dir=/kingbase/dump/back/`date +%Y%m%d -d "-30 day"`
 hostinf="127.0.0.1"
 specified_dbs=""  # 用户指定的数据库列表（逗号分隔）
 specified_schema=""  # 用户指定的schema
+<<<<<<< HEAD
+=======
+compress=0  # 是否压缩备份文件，0不压缩，1压缩（默认不压缩）
+kingbase_bin=""  # 通过-b参数指定的kingbase二进制路径
+db_port=""  # 通过-p参数指定的数据库端口
+
+# 设置金仓数据库的密码（仅当db_pwd非空时导出）
+if [[ -n "$db_pwd" ]]; then
+    export KINGBASE_PASSWORD="${db_pwd}"
+fi
+>>>>>>> a80151d (20260121)
 
 set -e
 
