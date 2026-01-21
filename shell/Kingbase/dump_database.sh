@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v 3.6
+#v 3.8
 
 db_pwd=""
 back_dir=/kingbase/dump/back/`date +%Y%m%d`
@@ -12,8 +12,10 @@ compress=0  # 是否压缩备份文件，0不压缩，1压缩（默认不压缩�
 kingbase_bin=""  # 通过-b参数指定的kingbase二进制路径
 db_port=""  # 通过-p参数指定的数据库端口
 
-#设置金仓数据库的默认密码
-export KINGBASE_PASSWORD=${db_pwd}
+# 设置金仓数据库的密码（仅当db_pwd非空时导出）
+if [[ -n "$db_pwd" ]]; then
+    export KINGBASE_PASSWORD="${db_pwd}"
+fi
 
 set -e
 
