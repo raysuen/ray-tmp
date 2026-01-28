@@ -1,10 +1,6 @@
 #!/bin/bash
 #by raysuen
-<<<<<<< HEAD
-#v 3.8
-=======
 #v 3.6
->>>>>>> c2ada33
 
 db_pwd=""
 back_dir=/kingbase/dump/back/`date +%Y%m%d`
