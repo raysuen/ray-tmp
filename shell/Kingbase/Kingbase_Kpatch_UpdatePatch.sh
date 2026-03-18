@@ -1,0 +1,134 @@
+#!/bin/bash
+# 脚本功能：Kingbase补丁部署（修复进程检测退出+路径问题+支持KESRealPro路径+增加路径存在性检查）
+# 使用方法：./test.sh <补丁包完整路径>
+#v 1.8（新增：显式检查KINGBASE_INSTALL和KPATCH_K_PATH目录是否存在）
+
+# 优化严格模式：保留变量检查，但允许管道空输出（避免无进程时退出）
+set -uo pipefail
+# 出错时打印错误并退出（替代set -e，更可控）
+trap 'echo -e "\033[31m【错误】脚本执行失败，退出行号：$LINENO\033[0m"; exit 1' ERR
+
+# ======================== 1. 参数检查 ========================
+if [ $# -ne 1 ]; then
+    echo -e "\033[31m【错误】参数数量错误！\033[0m"
+    echo "用法: $0 <Kingbase补丁包完整路径>"
+    echo "示例: $0 /home/kingbase/kingbase-server-V008R006C008B0014PS091-linux-aarch64.tar"
+    exit 1
+fi
+
+PATCH_TAR_FILE="$1"
+if [ ! -f "${PATCH_TAR_FILE}" ]; then
+    echo -e "\033[31m【错误】补丁包不存在：${PATCH_TAR_FILE}\033[0m"
+    exit 1
+fi
+
+# ======================== 2. 提取关键路径/版本 ========================
+echo -e "\033[32m【步骤1】提取Kingbase进程相关路径...\033[0m"
+# 提取kingbase可执行文件路径（允许空输出，后续检查）
+KINGBASE_BIN_PATH=$(ps -ef | grep "bin/kingbase" | grep -v grep | awk '{print $(NF-2)}' || true)
+if [ -z "${KINGBASE_BIN_PATH}" ]; then
+    echo -e "\033[31m【错误】未找到kingbase进程，请确认Kingbase已启动！\033[0m"
+    exit 1
+fi
+echo "Kingbase可执行文件路径：${KINGBASE_BIN_PATH}"
+
+# ======================== 处理KESRealPro路径 ========================
+if [[ "${KINGBASE_BIN_PATH}" == *KESRealPro* ]]; then
+    echo -e "\033[33m【提示】检测到KESRealPro目录，调整路径提取逻辑\033[0m"
+    # 提取到KESRealPro的上一级目录
+    KINGBASE_INSTALL=$(echo "${KINGBASE_BIN_PATH}" | sed 's|/KESRealPro/.*||')
+    echo "Kingbase安装根路径（根据KESRealPro截取）：${KINGBASE_INSTALL}"
+    # KPATCH_K_PATH 直接指向 Server 目录
+    KPATCH_K_PATH="${KINGBASE_INSTALL}/Server/"
+else
+    # 原逻辑：三层dirname提取安装根路径
+    KINGBASE_INSTALL=$(dirname $(dirname $(dirname "${KINGBASE_BIN_PATH}")))
+    echo "Kingbase安装根路径（三层dirname）：${KINGBASE_INSTALL}"
+    # 定义初始的KPATCH_K_PATH
+    KPATCH_K_PATH="${KINGBASE_INSTALL}/kingbase/"
+    # 检查初始路径是否存在，不存在则取bin/kingbase的**上两层目录**（Server目录，即安装根目录）
+    if [ ! -d "${KPATCH_K_PATH}" ]; then
+        echo -e "\033[33m【提示】初始kpatch路径不存在：${KPATCH_K_PATH}，将使用bin/kingbase的上两层目录\033[0m"
+        # 修正：dirname一次是bin目录，再dirname一次是Server目录（kpatch -k需要的正确路径）
+        KPATCH_K_PATH=$(dirname $(dirname "${KINGBASE_BIN_PATH}"))/
+    fi
+fi
+
+# 验证Kingbase安装根目录是否存在
+if [ ! -d "${KINGBASE_INSTALL}" ]; then
+    echo -e "\033[31m【错误】Kingbase安装根路径不存在：${KINGBASE_INSTALL}\033[0m"
+    exit 1
+fi
+
+# 验证最终的KPATCH_K_PATH是否存在（兜底校验）
+if [ ! -d "${KPATCH_K_PATH}" ]; then
+    echo -e "\033[31m【错误】最终的kpatch -k 路径不存在：${KPATCH_K_PATH}\033[0m"
+    exit 1
+fi
+echo "kpatch -k 安装路径：${KPATCH_K_PATH}"
+
+# 提取-D的data路径（允许空输出，后续检查）
+KPATCH_D_PATH=$(ps -ef | grep "bin/kingbase" | grep -v grep | awk '{print $NF}' || true)
+if [ -z "${KPATCH_D_PATH}" ] || [ ! -d "${KPATCH_D_PATH}" ]; then
+    echo -e "\033[31m【错误】无法提取/验证data路径：${KPATCH_D_PATH:-空}\033[0m"
+    exit 1
+fi
+echo "kpatch -D 数据路径：${KPATCH_D_PATH}"
+
+# 提取补丁包文件名/版本号
+PATCH_TAR_NAME=$(basename "${PATCH_TAR_FILE}")
+echo "补丁包文件名：${PATCH_TAR_NAME}"
+
+PATCH_VERSION=$(echo "${PATCH_TAR_NAME}" | grep -o 'V[0-9A-Z]*PS[0-9]*' || true)
+if [ -z "${PATCH_VERSION}" ]; then
+    echo -e "\033[31m【错误】无法提取版本号！\033[0m"
+    exit 1
+fi
+echo "补丁版本号：${PATCH_VERSION}"
+
+# ======================== 3. 检测进程（关键修复：允许空输出） ========================
+echo -e "\033[32m【步骤2】检测repmgrd/kbka进程...\033[0m"
+KPATCH_MODE="single"
+
+# 检测repmgrd（|| true 避免无匹配时管道退出）
+REPMGRD_EXIST=$(ps -ef | grep repmgrd | grep -v grep | wc -l || true)
+echo "【调试】repmgrd进程数量：${REPMGRD_EXIST}"
+
+# 检测kbha（|| true 避免无匹配时管道退出）
+KBHA_EXIST=$(ps -ef | grep kbha | grep -v grep | wc -l || true)
+echo "【调试】kbka进程数量：${KBHA_EXIST}"
+
+# 判断是否切换为集群模式
+if [ ${REPMGRD_EXIST} -gt 0 ] || [ ${KBHA_EXIST} -gt 0 ]; then
+    KPATCH_MODE="cluster_rolling"
+    echo -e "\033[33m【提示】检测到集群进程，使用cluster_rolling模式\033[0m"
+else
+    echo -e "\033[33m【提示】未检测到集群进程，使用single模式\033[0m"
+fi
+
+# ======================== 4. 执行补丁部署 ========================
+echo -e "\033[32m【步骤3】创建补丁目录...\033[0m"
+PATCH_DIR="${KINGBASE_INSTALL}/Kpatch/patch_packages"
+mkdir -p "${PATCH_DIR}"
+echo "补丁目录：${PATCH_DIR}"
+
+echo -e "\033[32m【步骤4】移动补丁包...\033[0m"
+mv "${PATCH_TAR_FILE}" "${PATCH_DIR}/"
+echo "补丁包已移动至：${PATCH_DIR}/${PATCH_TAR_NAME}"
+
+echo -e "\033[32m【步骤5】解压补丁包...\033[0m"
+cd "${PATCH_DIR}" || exit 1
+tar -zxf "${PATCH_TAR_NAME}" --strip-components 2 -C .. ./bin/kpatch
+echo "解压完成：提取kpatch到 ${KINGBASE_INSTALL}/Kpatch/"
+
+echo -e "\033[32m【步骤6】执行kpatch...\033[0m"
+cd .. || exit 1
+./kpatch -k "${KPATCH_K_PATH}" -D "${KPATCH_D_PATH}" -t "${PATCH_VERSION}" apply "${KPATCH_MODE}"
+
+# ======================== 5. 执行完成 ========================
+echo -e "\033[32m【成功】补丁部署完成！\033[0m"
+echo "关键信息："
+echo "  - 安装路径：${KINGBASE_INSTALL}"
+echo "  - 补丁模式：${KPATCH_MODE}"
+echo "  - 补丁包最终路径：${PATCH_DIR}/${PATCH_TAR_NAME}"
+echo "  - kpatch -k 实际使用路径：${KPATCH_K_PATH}"
