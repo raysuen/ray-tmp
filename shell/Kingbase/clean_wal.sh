@@ -1,19 +1,27 @@
 #!/bin/bash
 #raysuen
-#v3.6 (新增帮助函数，支持-h/--help查看帮助；新增-n参数免交互执行，保留交互式确认逻辑)
+#v3.8.1 (修复cal_wal计算负数后未退出的bug，增加健壮性检查)
 
 # 金仓数据库配置（请根据实际环境填写）
 kingbase_bin=/path/to/kingbase/bin  # 金仓bin目录，最后不要加斜线
 kingbase_data=/path/to/kingbase/data  # 金仓数据目录，最后不要加斜线
 db_user="system"  # 数据库管理员用户
 db_name="kingbase"  # 数据库名称
+db_port="54321" #数据库默认端口
 KINGBASE_PASSWORD=''   #db_user用户密码
+
+LANG=C
+# 计算符（默认减法，保留最近的WAL文件）
+OP=-
+# 保留的WAL文件数量（默认保留2个）
+NUM=2
+
 
 # 显示帮助信息函数
 show_help() {
     cat << EOF
 ==========================================================================
-金仓数据库WAL文件清理脚本 (clean_wal.sh) - v3.6
+金仓数据库WAL文件清理脚本 (clean_wal.sh) - v3.8.1
 ==========================================================================
 用途：
   自动计算并清理金仓数据库过期的WAL（Write-Ahead Log）文件，
@@ -24,6 +32,7 @@ show_help() {
   kingbase_data   金仓数据库data目录（必填，如：/opt/kingbase/ES/V8/data）
   db_user         数据库管理员用户（默认：system）
   db_name         数据库名称（默认：kingbase）
+  db_port         数据库端口(默认：54321)
   KINGBASE_PASSWORD  管理员用户密码（为空时不导出环境变量）
 
 参数说明：
@@ -58,11 +67,6 @@ else
     echo "ℹ️  数据库密码为空，未导出环境变量 KINGBASE_PASSWORD"
 fi
 
-LANG=C
-# 计算符（默认减法，保留最近的WAL文件）
-OP=-
-# 保留的WAL文件数量（默认保留2个）
-NUM=2
 
 # 初始化强制执行标志（默认不强制，需交互）
 force_exec=0
@@ -156,9 +160,9 @@ cal_wal(){
             ;;
     esac
     
-    # 防止结果为负数
+    # 防止结果为负数，直接退出脚本
     if [ "$result_dec" -lt 0 ]; then
-        echo "报警：WAL计算结果为负数（$result_dec），退出执行！" >&2
+        echo "错误：WAL计算结果为负数（$result_dec），退出执行！" >&2
         exit 1
     fi
     
@@ -186,7 +190,7 @@ get_walfile(){
 get_min_replay_wal(){
     # 获取从库已应用的最小WAL文件
     # 使用socket连接数据库，直接查询WAL文件名
-    wal_list=$( ${kingbase_bin}/ksql -U "$db_user" -d "$db_name" -t -c \
+    wal_list=$( ${kingbase_bin}/ksql -U "$db_user" -d "$db_name" -p "${db_port}" -t -c \
         "SELECT pg_walfile_name(replay_lsn) FROM pg_stat_replication WHERE replay_lsn IS NOT NULL;" 2>/dev/null )
     
     if [ -z "$wal_list" ]; then
@@ -230,8 +234,13 @@ else
     base_wal="$wal_file_num"
 fi
 
-# 计算保留位置
+# 计算保留位置（若计算失败cal_wal内部会exit，脚本终止）
 final_result=$(cal_wal "$base_wal" "$OP" "$NUM")
+# 检查返回值（防止cal_wal未退出但输出为空的情况）
+if [ -z "$final_result" ]; then
+    echo "错误：计算WAL阈值失败，结果为空" >&2
+    exit 1
+fi
 echo "#delete wal files: $final_result"
 
 # ===================== 核心逻辑：参数判断 + 交互/免交互执行 =====================

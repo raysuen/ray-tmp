@@ -1,6 +1,6 @@
 #!/bin/bash
 #by raysuen
-#v3.5
+#v3.8
 
 # 帮助函数
 show_help() {
@@ -31,9 +31,9 @@ generate_password() {
     fi
 
     # 定义字符集（排除易混淆字符）
-    local upper="ABCDEFGHJKLMNPQRSTUVWXYZ"  # 排除 I,O
-    local lower="abcdefghjkmnpqrstuvwxyz"   # 排除 i,l,o
-    local digits="23456789"                # 排除 0,1
+    local upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 
+    local lower="abcdefghijklmnopqrstuvwxyz"   # 
+    local digits="1234567890"                # 
     local special='@#()%^&*_+=-~`?!'         # 安全特殊字符
 
     # 生成满足最小数量要求的字符
@@ -70,7 +70,7 @@ generate_password() {
     fi
 
     # 替代 shuf 的随机打乱方案
-    {
+    final_password=$(
         # 将字符串拆分为单个字符
         fold -w1 <<< "$password" |
         # 使用 awk 添加随机数前缀
@@ -81,7 +81,10 @@ generate_password() {
         cut -d' ' -f2- |
         # 合并为一行
         tr -d '\n'
-    } 2>/dev/null
+    ) 2>/dev/null
+    
+    # 输出最终生成的密码
+    echo "$final_password"
 }
 
 # 修改密码函数
@@ -117,6 +120,7 @@ ModifyPassword() {
 # 解析命令行参数
 if [ $# -eq 0 ]; then
     generate_password 12
+    exit 0  # 无参数生成密码后直接退出
 else
     while getopts ":g:m:h" opt; do
         case $opt in
@@ -188,8 +192,9 @@ else
     done
 fi
 
-if [ $OPTIND -eq 1 ]; then
-    echo "未提供选项。"
+# 仅当「有参数但无有效选项」时触发帮助
+if [ $OPTIND -eq 1 ] && [ $# -ne 0 ]; then
+    echo "未提供有效选项。" >&2
     show_help
     exit 1
 fi
