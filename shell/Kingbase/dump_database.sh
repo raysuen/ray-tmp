@@ -1,304 +1,251 @@
 #!/bin/bash
-#by raysuen
-#v 3.6
+# =============================================================================
+# by raysuen
+# v4.2
+# =============================================================================
 
-db_pwd=""
-back_dir=/kingbase/dump/back/`date +%Y%m%d`
-rm_dir=/kingbase/dump/back/`date +%Y%m%d -d "-30 day"`
+# ----------------------------- 全局变量 ---------------------------------
+# 数据库密码（若含特殊字符，请用单引号包裹）
+db_pwd=''
+
+# 数据库连接用户名（默认 system，可通过 -u 参数覆盖）
+DB_USER="system"
+
+# 备份文件根目录（可按需修改）
+BACKUP_BASE_DIR="/kingbase/dump/back"
+
+# 备份文件保留天数（可按需修改）
+RETENTION_DAYS=30
+
+back_dir="${BACKUP_BASE_DIR}/$(date +%Y%m%d)"
+rm_dir="${BACKUP_BASE_DIR}/$(date -d "-${RETENTION_DAYS} day" +%Y%m%d 2>/dev/null || date -v-${RETENTION_DAYS}d +%Y%m%d 2>/dev/null || echo "")"
 hostinf="127.0.0.1"
-specified_dbs=""  # 用户指定的数据库列表（逗号分隔）
-specified_schema=""  # 用户指定的schema
-compress=0  # 是否压缩备份文件，0不压缩，1压缩（默认不压缩）
-kingbase_bin=""  # 通过-b参数指定的kingbase二进制路径
-db_port=""  # 通过-p参数指定的数据库端口
+specified_dbs=""
+specified_schema=""
+compress=0
+kingbase_bin=""
+db_port=""
+LOG_TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
-# 设置金仓数据库的密码（仅当db_pwd非空时导出）
-if [[ -n "$db_pwd" ]]; then
-    export KINGBASE_PASSWORD="${db_pwd}"
-fi
+# 颜色定义
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
 
-set -e
+log_info()  { echo "[INFO] $LOG_TIMESTAMP - $*"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $LOG_TIMESTAMP - $*" >&2; }
 
-# 显示帮助信息
+# ----------------------------- 帮助信息 ---------------------------------
 show_help() {
     cat << EOF
 用法: $0 [选项]
 
 选项:
-  -d 数据库列表   指定要备份的数据库（逗号分隔，如：-d db1,db2，与-s配合使用）
-  -s schema名     指定要备份的schema（需配合-d指定数据库，备份该schema的结构和数据）
-  -z              启用备份文件压缩（默认不压缩，使用gzip压缩）
-  -b 路径         指定kingbase二进制文件目录路径（如：-b /opt/kingbase/Server/bin）
-  -p 端口号       指定数据库端口（如：-p 54321）
-  -h              显示此帮助信息并退出
+  -d 数据库列表   指定要备份的数据库（逗号分隔）
+  -s schema名     指定schema（需配合-d）
+  -u 用户名       指定连接数据库的用户名（默认：system）
+  -z              启用gzip压缩
+  -b 路径         指定kingbase二进制目录
+  -p 端口         指定数据库端口
+  -h              显示本帮助
 
-说明:
-  1. 未指定任何选项时，默认备份除系统库外的所有数据库（全量备份）
-  2. 指定-s时必须同时指定-d，仅备份指定数据库下的指定schema（包含结构和数据）
-  3. 自动删除30天前的备份文件，备份目录：/kingbase/dump/back/[日期]
-  4. 使用-z选项可对备份文件进行gzip压缩，压缩后文件扩展名为.dump.gz
-  5. 若指定-b参数，将直接使用该路径下的二进制工具；未指定则自动检测
-  6. 若指定-p参数，将使用该端口连接数据库；未指定则自动检测（默认54321）
+配置说明:
+  - 默认连接用户：system（可通过 -u 修改）
+  - 备份根目录：${BACKUP_BASE_DIR}（可修改脚本顶部 BACKUP_BASE_DIR 变量）
+  - 备份文件默认保留 ${RETENTION_DAYS} 天（可修改 RETENTION_DAYS 变量）
+
+示例:
+  $0                                                                                  # 全量备份所有用户库（用户 system）
+  $0 -d db1,db2,db3                                                         #备份指定的多个数据库
+  $0 -b /opt/Kingbase/ES/V8/Server/bin -p 54321 -z       #指定数据库端口和二进制路径（适用于自定义安装）
+  $0 -u kingbase -d mydb -s public -z                              # 使用 kingbase 用户备份指定库的 public schema
+  $0 -b /opt/kingbase/bin -p 54321                                  # 手动指定路径和端口
 EOF
 }
 
-# 解析命令行参数
+# ----------------------------- 参数解析 ---------------------------------
 parse_args() {
-    while getopts "d:s:zb:p:h" opt; do
+    while getopts "d:s:u:zb:p:h" opt; do
         case $opt in
             d) specified_dbs="$OPTARG" ;;
             s) specified_schema="$OPTARG" ;;
+            u) DB_USER="$OPTARG" ;;
             z) compress=1 ;;
             b) kingbase_bin="$OPTARG" ;;
             p) db_port="$OPTARG" ;;
             h) show_help; exit 0 ;;
-            *) echo "错误：无效选项 '$opt'，使用 -h 查看帮助" >&2; exit 1 ;;
+            *) exit 1 ;;
         esac
     done
 
-    # 检查-s参数是否单独使用
     if [[ -n "$specified_schema" && -z "$specified_dbs" ]]; then
-        echo "错误：使用-s指定schema时，必须通过-d指定数据库（如：-d db1 -s schema1）" >&2;
-        exit 1;
+        log_error "使用 -s 指定 schema 时必须同时用 -d 指定数据库"
+        exit 1
+    fi
+}
+
+# ----------------------------- 密码设置 ---------------------------------
+setup_password() {
+    if [[ -n "$db_pwd" ]]; then
+        export PGPASSWORD="$db_pwd"
+        export KINGBASE_PASSWORD="$db_pwd"
+        log_info "密码环境变量已设置"
+    else
+        log_error "未在脚本中设置 db_pwd 变量，且未发现外部 PGPASSWORD 环境变量"
+        log_error "请在脚本顶部修改变量 db_pwd 或执行 export PGPASSWORD='你的密码'"
+        exit 1
+    fi
+}
+
+# ----------------------------- 环境检测 ---------------------------------
+detect_environment() {
+    local checkpointer_pids
+    checkpointer_pids=$(pgrep -f "kingbase:.*checkpointer" 2>/dev/null || true)
+
+    if [[ -z "$checkpointer_pids" ]]; then
+        log_error "未检测到运行中的 KingbaseES 实例"
+        exit 1
     fi
 
-    # 验证端口参数格式
-    if [[ -n "$db_port" && ! "$db_port" =~ ^[0-9]+$ ]]; then
-        echo "错误：端口号必须为数字（-p 参数）" >&2;
-        exit 1;
-    fi
-    if [[ -n "$db_port" && ( "$db_port" -lt 1 || "$db_port" -gt 65535 ) ]]; then
-        echo "错误：端口号必须在1-65535之间（-p 参数）" >&2;
-        exit 1;
+    local KESPID=$(echo "$checkpointer_pids" | head -1)
+    log_info "检测到 KingbaseES 进程 PID: $KESPID"
+
+    if [[ -f "/proc/$KESPID/exe" ]]; then
+        kingbase_bin_detected=$(dirname "$(readlink -f "/proc/$KESPID/exe")")
+        log_info "自动检测二进制路径: $kingbase_bin_detected"
+    else
+        log_error "无法获取二进制路径，请使用 -b 参数指定"
+        exit 1
     fi
 
-    # 验证kingbase_bin路径
-    if [[ -n "$kingbase_bin" ]]; then
-        if [[ ! -d "$kingbase_bin" ]]; then
-            echo "错误：指定的kingbase二进制目录不存在（-b 参数）" >&2;
-            exit 1;
+    [[ -z "$kingbase_bin" ]] && kingbase_bin="$kingbase_bin_detected"
+
+    if [[ -z "$db_port" ]]; then
+        local socket_file
+        socket_file=$(find /tmp -name ".s.KINGBASE.*" -type s 2>/dev/null | head -1) || true
+        if [[ -n "$socket_file" ]]; then
+            db_port=$(basename "$socket_file" | grep -Eo '[0-9]+$' || echo "")
+            [[ -n "$db_port" ]] && log_info "通过 Unix socket 检测到端口: $db_port"
         fi
-        if [[ ! -f "$kingbase_bin/ksql" || ! -f "$kingbase_bin/sys_dump" ]]; then
-            echo "错误：指定的目录中未找到ksql或sys_dump工具（-b 参数）" >&2;
-            exit 1;
+        if [[ -z "$db_port" ]]; then
+            db_port=54321
+            log_info "使用默认端口: $db_port"
         fi
     fi
 }
 
-# 1. 检查数据库状态并获取路径信息（当未指定-b时执行）
-check_database_data(){
-    main_proc_num=$(ps -ef|grep -E "kingbase:.*checkpointer"|grep -v grep|wc -l)
-    case $main_proc_num in
-        0)
-            echo "the database is not on live, please input kingbase home path:"
-            read kingbase_home
-            if [[ ! -d "$kingbase_home" ]] || [[ ! -f "$kingbase_home/Server/bin/kingbase" ]]; then
-                echo "kingbase home path is error, please check it and try again !"
-                echo ""
-                exit
-            fi
-            server_path=$kingbase_home/Server
-            bin_path=$server_path/bin       
-            kingbase_path=$bin_path/kingbase
-            
-            echo "can not get data path from main process, please input the data path:"
-            read data_dir
-            if [[ ! -d "$data_dir" ]] || [[ ! -f "$data_dir/kingbase.conf" ]]; then
-                echo "data path is error"
-                echo "you can use: \"find / -name kingbase.conf\" to find it"
-                echo "please check and try again !"
-                exit 10
-            fi          
-            ;;
-        1)
-            KESPID=$(ps -ef|grep -E "kingbase:.*checkpointer"|grep -v grep|awk '{print $3}'|head -1)
-            kingbase_path=$(ls -l /proc/$KESPID/exe|awk '{print $NF}')
-            data_dir=$(ls -l /proc/$KESPID/cwd|awk '{print $NF}')
-            bin_path=${kingbase_path%/*}
-            server_path=${bin_path%/*}
-            kingbase_home=${server_path%/*}
-            ;;      
-        *)
-            echo "There are multiple KingbaseES main processes, please select one: "
-            ps -ef|grep -E "kingbase:.*checkpointer"|grep -v grep|awk '{print $3}'|while read line; do echo "KES PID: $line"; ls -l /proc/$line/exe|awk '{print $NF}'|xargs echo "    CMD : " ;ls -l /proc/$line/cwd|awk '{print $NF}'|xargs echo "    DATA: " ;  done
-            echo "Enter KingbaseES PID:"
-            read KESPID
-            kingbase_path=$(ls -l /proc/$KESPID/exe|awk '{print $NF}')
-            data_dir=$(ls -l /proc/$KESPID/cwd|awk '{print $NF}')
-            bin_path=${kingbase_path%/*}
-            server_path=${bin_path%/*}
-            kingbase_home=${server_path%/*}
-    esac 
-    
-    if [ ! -f "$kingbase_path" ]; then
-        echo "kingbase_path is error"
-        echo "please check and try again !"
-        exit 10
+# ----------------------------- 测试连接 ---------------------------------
+test_connection() {
+    log_info "测试数据库连接（用户: $DB_USER，主机: $hostinf:$db_port）..."
+    if ! "$kingbase_bin/ksql" -U "$DB_USER" -h "$hostinf" -p "$db_port" -d template1 -c "SELECT 1;" >/dev/null 2>&1; then
+        log_error "数据库连接失败！请检查："
+        log_error "  - 服务是否运行"
+        log_error "  - 密码是否正确（当前使用脚本内 db_pwd 变量）"
+        log_error "  - 用户 '$DB_USER' 是否有权限访问"
+        log_error "  - 防火墙设置"
+        exit 1
     fi
+    log_info "数据库连接测试成功"
 }
 
-# 获取数据库端口（当未指定-p时执行）
-GetPort(){
-        if [[ `ls /tmp/.*.KINGBASE.* | egrep -v "lock" | wc -l` -eq 1 ]];then
-               kingbase_port=$(ls -1 /tmp/.s.KINGBASE.* 2>/dev/null | grep -Eo '[0-9]+$' | head -1)
-        fi
-        if [[ "${data_dir: -1}" == "/" ]];then
-                data_dir=`echo ${data_dir} | sed 's/.$//'`
-        fi
-
-        if [ -z ${kingbase_port} ];then
-                arr=(`egrep "^include" ${data_dir}/kingbase.conf | sed "s/'//g" | awk 'BEGIN{print "kingbase.conf"}{print $NF}'`)
-                for i in $(seq $((${#arr[@]}-1)) -1 0)
-                do
-                        kingbase_port=$(egrep -i "^port" ${data_dir}/${arr[$i]} | awk '{print $3}')
-                        if [ ! -z ${kingbase_port} ];then
-                                break
-                        fi
-                done
-        fi
-
-        # 若仍未获取到端口，使用默认端口54321
-        if [ -z "${kingbase_port}" ];then
-                echo "No kingbase port found, using default port 54321"
-                kingbase_port=54321
-        fi
-}
-
-# 获取数据库列表（支持用户指定）
-db_list(){
-    # 确定使用的端口和二进制路径
-    local use_port=${db_port:-$kingbase_port}
-    local use_bin=${kingbase_bin:-$bin_path}
+# ----------------------------- 获取数据库列表 ---------------------------
+get_db_list() {
+    local all_dbs
+    if ! all_dbs=$("$kingbase_bin/ksql" -U "$DB_USER" -h "$hostinf" -p "$db_port" -d template1 -Atc "SELECT datname FROM sys_catalog.sys_database;"); then
+        log_error "无法获取数据库列表"
+        exit 1
+    fi
 
     if [[ -n "$specified_dbs" ]]; then
-        # 分割用户指定的数据库列表
         IFS=',' read -ra db_array <<< "$specified_dbs"
-        # 验证指定的数据库是否存在（使用template1作为查询入口）
-        all_dbs=$($use_bin/ksql -Usystem -h ${hostinf} -A -p $use_port template1 -c "select datname from sys_catalog.sys_database;" -t | grep -v '^$')
+        local valid_dbs=""
         for db in "${db_array[@]}"; do
-            if ! echo "$all_dbs" | grep -q "^$db$"; then
-                echo "数据库 $db 不存在，跳过..."
+            if echo "$all_dbs" | grep -qxF "$db"; then
+                valid_dbs="$valid_dbs $db"
             else
-                DATABASES="$DATABASES $db"
+                log_info "指定的数据库 '$db' 不存在，已跳过"
             fi
         done
-        # 检查是否有有效数据库
-        if [[ -z "$DATABASES" ]]; then
-            echo "没有有效的数据库可备份"
-            exit 20
+        if [[ -z "$valid_dbs" ]]; then
+            log_error "没有有效的数据库可备份"
+            exit 1
         fi
+        DATABASES="$valid_dbs"
     else
-        # 默认备份排除系统库的所有数据库（使用template1作为查询入口）
-        DATABASES=$($use_bin/ksql -Usystem -h ${hostinf} -A -p $use_port template1 -c "select datname as test  from sys_catalog.sys_database where datname not in('test','template1','template0','security','kingbase');" -t | grep -v '^$')
+        DATABASES=$("$kingbase_bin/ksql" -U "$DB_USER" -h "$hostinf" -p "$db_port" -d template1 -Atc \
+            "SELECT datname FROM sys_catalog.sys_database WHERE datname NOT IN ('test','template1','template0','security','kingbase');")
+        if [[ -z "$DATABASES" ]]; then
+            log_error "未找到任何用户数据库"
+            exit 1
+        fi
     fi
+    log_info "待备份数据库列表: ${DATABASES//$'\n'/ }"
 }
 
-# 备份数据库（支持指定schema，包含数据）
-# 备份数据库（支持指定schema，包含数据）
-dump_db(){
-    [ ! -d ${back_dir} ]&& mkdir -p ${back_dir}
-    # 确定使用的端口和二进制路径
-    local use_port=${db_port:-$kingbase_port}
-    local use_bin=${kingbase_bin:-$bin_path}
+# ----------------------------- 执行备份 ---------------------------------
+perform_backup() {
+    mkdir -p "$back_dir" || { log_error "无法创建备份目录 $back_dir"; exit 1; }
 
-    for db in $DATABASES
-    do
-        echo "开始备份数据库: $db ${specified_schema:+（schema: $specified_schema）}"
-        
-        # 获取数据库的server_encoding
-        echo "查询数据库 $db 的字符集编码..."
-        encoding=$($use_bin/ksql -Usystem -h ${hostinf} -p $use_port -d $db -c "show server_encoding;" -t 2>/dev/null | tr -d '[:space:]')
-        if [[ -z "$encoding" ]]; then
-            echo "警告：无法获取数据库 $db 的编码，使用默认编码 UTF8"
-            encoding="UTF8"
-        else
-            echo "数据库 $db 的字符集编码为: $encoding"
-        fi
+    for db in $DATABASES; do
+        log_info "开始备份数据库: $db ${specified_schema:+（schema: $specified_schema）}"
 
-        # 基础备份命令（添加-E指定字符集）
-        dump_cmd="$use_bin/sys_dump -Usystem -h ${hostinf} -p $use_port -Fc -d $db -E $encoding"
-        # 若指定了schema，添加-n参数（仅备份该schema，包含结构和数据）
-        if [[ -n "$specified_schema" ]]; then
-            dump_cmd="$dump_cmd -n $specified_schema"
-        fi
-        # 输出文件名（包含schema信息）
-        output_file="${back_dir}/${db}${specified_schema:+.${specified_schema}}.dump"
-        dump_cmd="$dump_cmd -f $output_file"
-        
-        # 执行备份
-        set +e
-        if $dump_cmd; then
-            echo "备份成功: $output_file"
-            # 若需要压缩，执行gzip压缩
+        local encoding
+        encoding=$("$kingbase_bin/ksql" -U "$DB_USER" -h "$hostinf" -p "$db_port" -d "$db" -Atc "SHOW server_encoding;" 2>/dev/null | tr -d '[:space:]')
+        [[ -z "$encoding" ]] && encoding="UTF8"
+
+        local output_file="${back_dir}/${db}${specified_schema:+.${specified_schema}}.dump"
+        local dump_cmd=("$kingbase_bin/sys_dump" -U "$DB_USER" -h "$hostinf" -p "$db_port" -Fc -d "$db" -E "$encoding")
+        [[ -n "$specified_schema" ]] && dump_cmd+=(-n "$specified_schema")
+        dump_cmd+=(-f "$output_file")
+
+        if "${dump_cmd[@]}"; then
+            log_info "备份成功: $output_file"
             if [[ $compress -eq 1 ]]; then
-                if gzip "$output_file"; then
-                    echo "压缩成功: ${output_file}.gz"
+                if gzip -f "$output_file"; then
+                    log_info "压缩成功: ${output_file}.gz"
                 else
-                    echo "压缩失败: $output_file" >&2
+                    log_error "压缩失败"
                 fi
             fi
         else
-            echo "备份失败: $db ${specified_schema:+（schema: $specified_schema）}" >&2
-        fi
-        set -e
-    done
-}
-
-# 删除旧备份
-del_backup() {
-    if [[ -z "${rm_dir}" ]]; then
-        echo "错误：删除目录未指定" >&2
-        return 1
-    fi
-
-    resolved_dir=$(realpath -e -- "${rm_dir}" 2>/dev/null) || {
-        echo "错误：目录不存在或不可访问 '${rm_dir}'" >&2
-        return 2
-    }
-
-    local protected_dirs=("/" "/bin" "/sbin" "/usr" "/etc" "/home" "/root" "/var")
-    for dir in "${protected_dirs[@]}"; do
-        if [[ "${resolved_dir}" == "${dir}" || "${resolved_dir}/" == "${dir}/"* ]]; then
-            echo "错误：拒绝删除系统保护目录 '${resolved_dir}'" >&2
-            return 3
+            log_error "备份失败: $db"
         fi
     done
-
-    if [[ ! -w "${resolved_dir}" ]]; then
-        echo "错误：无删除权限 '${resolved_dir}'" >&2
-        return 4
-    fi
-
-    if ! rm -rf -- "${resolved_dir}"; then
-        echo "删除失败: $?" >&2
-        return 6
-    fi
-
-    echo "目录已删除: ${resolved_dir}"
-    return 0
 }
 
-run(){
-    parse_args "$@"  # 解析命令行参数
-    
-    # 处理二进制路径：若未指定则自动检测
-    if [[ -z "$kingbase_bin" ]]; then
-        check_database_data
-    else
-        echo "使用指定的kingbase二进制路径: $kingbase_bin"
-    fi
+# ----------------------------- 清理过期备份 -----------------------------
+cleanup_old_backups() {
+    local cutoff_date
+    cutoff_date=$(date -d "-${RETENTION_DAYS} day" +%Y%m%d 2>/dev/null || date -v-${RETENTION_DAYS}d +%Y%m%d 2>/dev/null)
+    [[ -z "$cutoff_date" ]] && { log_error "无法计算过期日期，跳过清理"; return; }
 
-    # 处理端口：若未指定则自动检测
-    if [[ -z "$db_port" ]]; then
-        GetPort
+    local old_dir="${BACKUP_BASE_DIR}/$cutoff_date"
+    if [[ -d "$old_dir" ]]; then
+        local resolved=$(readlink -f "$old_dir" 2>/dev/null || realpath "$old_dir" 2>/dev/null || echo "$old_dir")
+        # 安全检查：确保待删除目录确实在备份根目录下
+        if [[ "$resolved" != "${BACKUP_BASE_DIR}/"* ]]; then
+            log_error "安全保护：拒绝删除非备份目录 $resolved"
+            return
+        fi
+        log_info "清理过期备份（保留 ${RETENTION_DAYS} 天）: $resolved"
+        rm -rf "$resolved" && log_info "清理完成"
     else
-        kingbase_port=$db_port  # 同步给原有变量以便兼容
-        echo "使用指定的数据库端口: $db_port"
+        log_info "没有需要清理的过期备份（${old_dir}）"
     fi
-
-    db_list
-    dump_db
-    del_backup
 }
 
-run "$@"
+# ----------------------------- 主流程 -----------------------------------
+main() {
+    parse_args "$@"
+    setup_password
+    [[ -z "$kingbase_bin" || -z "$db_port" ]] && detect_environment
+    log_info "使用二进制: $kingbase_bin, 端口: $db_port, 用户: $DB_USER"
+    log_info "备份根目录: $BACKUP_BASE_DIR，保留 ${RETENTION_DAYS} 天"
+    test_connection
+    get_db_list
+    perform_backup
+    cleanup_old_backups
+    log_info "所有备份任务执行完毕"
+}
+
+main "$@"
