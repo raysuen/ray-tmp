@@ -9,7 +9,7 @@
 set -u
 
 # 全局配置
-super_user="system"          
+super_user="system"          #指定超级管理员，根据实际情况修改
 default_db="template1" 
 username=""
 newpassword=""
