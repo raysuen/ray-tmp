@@ -1,16 +1,12 @@
 #!/bin/bash
 # =============================================================================
-# KingbaseES 密码修改脚本 v4.1
-# 新增：支持三权分立用户 sso 和 sao 的密码修改（自动执行 SET ROLE）
+# KingbaseES 密码修改脚本 v4.3
+# 支持: -U 超级用户 或 将超级用户作为第三个位置参数
 # =============================================================================
-# by raysuen
-# v 4.1 (增加 sso/sao 角色切换)
-
 set -u
 
-# 全局配置
-super_user="system"          #指定超级管理员，根据实际情况修改
-default_db="template1" 
+super_user="system"   #超级用户，默认为system
+default_db="template1"
 username=""
 newpassword=""
 sys_hba_conf=""
@@ -20,15 +16,21 @@ kingbase_port="54321"
 data_dir=""
 bin_path=""
 
-# 用法提示
 usage() {
-    echo -e "\033[33m用法: $0 <用户名> <新密码>\033[0m"
-    echo -e "\033[33m示例: $0 test01 '123456'\033[0m"
-    echo -e "\033[33m       $0 sso 'new_sso_password'\033[0m"
+	echo -e "\033[33m用法: $0 <用户名> <新密码>\033[0m"
+    echo -e "\033[33m用法: $0 [-U 超级用户] <用户名> <新密码>\033[0m"
+	echo -e "\033[33m用法: $0 <用户名> <新密码> [超级用户]\033[0m"
+    echo -e "\033[33m示例: \033[0m"
+	echo -e "\033[33m       $0 sso 'new_sso_password'\033[0m"
+    echo -e "\033[33m       $0 -U superuser sso 'new_sso_password'\033[0m"
+	echo -e "\033[33m       $0 sso 'new_sso_password' superuser\033[0m"
+
+    echo -e "\033[33m选项:\033[0m"
+    echo -e "\033[33m  -U <用户>  指定执行操作的超级用户（默认: system）\033[0m"
+    echo -e "\033[33m  -h         显示本帮助信息\033[0m"
     exit 1
 }
 
-# 错误退出+恢复配置
 error_exit() {
     echo -e "\033[31m[错误] $1\033[0m"
     if [ -f "${sys_hba_conf}.bak" ]; then
@@ -38,7 +40,6 @@ error_exit() {
     exit "$2"
 }
 
-# 路径检查工具函数
 check_path() {
     local path_type=$1
     local path=$2
@@ -53,7 +54,6 @@ check_path() {
     return 0
 }
 
-# 检查数据库状态并获取路径信息
 check_database_data() {
     local pids=$(pgrep -f "kingbase:.*checkpointer" | tr '\n' ' ')
     local pid_count=$(echo "$pids" | wc -w)
@@ -105,7 +105,6 @@ check_database_data() {
     echo -e "  数据目录: $data_dir"
 }
 
-# 获取数据库端口
 GetPort() {
     data_dir="${data_dir%/}"
     local tmp_sock=$(ls /tmp/.s.KINGBASE.* 2>/dev/null | grep -v "lock" | head -1)
@@ -129,14 +128,12 @@ GetPort() {
     fi
 }
 
-# 转义单引号
 escape_password() {
     local raw_pwd="$1"
     escaped_pwd=$(echo "$raw_pwd" | sed -e "s/'/''/g")
     echo "$escaped_pwd"
 }
 
-# 强制修改sys_hba.conf为trust
 force_modify_sys_hba() {
     echo -e "\033[32m[配置] 强制修改sys_hba.conf...\033[0m"
     sys_hba_conf="${data_dir}/sys_hba.conf"
@@ -152,15 +149,12 @@ force_modify_sys_hba() {
     echo -e "\033[32m[配置] sys_hba.conf已改为trust：${check_result}\033[0m"
 }
 
-# 核心密码修改逻辑（支持 sso/sao 角色切换）
 change_password() {
     local escaped_pwd=$(escape_password "${newpassword}")
     local user_exists
 
-    # 检查用户是否存在
     user_exists=$("${ksql_path}" -U "${super_user}" -d "${default_db}" -p "${kingbase_port}" -t -c "SELECT 1 FROM pg_roles WHERE rolname='${username}';" 2>/dev/null)
     if [ -z "${user_exists}" ]; then
-        # 如果是三权分立内置用户，不应被创建，直接报错
         if [[ "${username}" == "sso" || "${username}" == "sao" ]]; then
             error_exit "用户 ${username} 是系统内置三权用户，但当前不存在！请检查数据库状态。" 11
         fi
@@ -169,7 +163,6 @@ change_password() {
         return 0
     fi
 
-    # 根据用户名决定是否需要切换角色
     local sql_cmd=""
     if [[ "${username}" == "sso" ]]; then
         echo -e "\033[33m[提示] 检测到三权用户 sso，将先执行 SET ROLE sso\033[0m"
@@ -186,7 +179,6 @@ change_password() {
     echo -e "\033[32m[成功] ${username}密码修改成功！\033[0m"
 }
 
-# 恢复sys_hba.conf
 restore_sys_hba() {
     echo -e "\033[32m[恢复] 恢复sys_hba.conf原有配置...\033[0m"
     if [ -f "${sys_hba_conf}.bak" ]; then
@@ -196,14 +188,40 @@ restore_sys_hba() {
     fi
 }
 
-# 主流程
+# ------------------ 解析参数（兼容两种方式）------------------
 main() {
-    if [ $# -ne 2 ]; then
+    # 先解析 -U 选项
+    while getopts "U:h" opt; do
+        case $opt in
+            U)
+                super_user="$OPTARG"
+                ;;
+            h)
+                usage
+                ;;
+            *)
+                usage
+                ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    # 根据剩余参数个数判断
+    if [ $# -eq 3 ]; then
+        # 三个参数：用户名 密码 超级用户
+        username="$1"
+        newpassword="$2"
+        super_user="$3"
+    elif [ $# -eq 2 ]; then
+        # 两个参数：用户名 密码
+        username="$1"
+        newpassword="$2"
+        # super_user 保持默认值或 -U 设置的值
+    else
         usage
     fi
-    username="$1"
-    newpassword="$2"
-    
+
+    # 执行原有流程
     check_database_data
     GetPort
     
